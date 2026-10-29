@@ -1,6 +1,7 @@
 import dns from 'node:dns';
 import { isIP } from 'node:net';
-import { Agent, fetch as undiciFetch } from 'undici';
+import https from 'node:https';
+import { Readable } from 'node:stream';
 import { isPrivateOrReservedIp } from './ip';
 
 export class SafeFetchError extends Error {
@@ -54,22 +55,64 @@ async function defaultLookup(hostname: string): Promise<string[]> {
  * pre-validation, the address actually connected to is re-checked here, which defeats
  * DNS-rebinding between "check" and "use".
  */
-const guardedAgent = new Agent({
-  connect: {
-    lookup: (hostname, options, callback) => {
-      dns.lookup(hostname, { ...options, all: true }, (err, addresses) => {
-        if (err) return callback(err, '', 4);
-        const list = Array.isArray(addresses) ? addresses : [];
-        const bad = list.find((a) => isPrivateOrReservedIp(a.address));
-        if (bad || list.length === 0) {
-          return callback(new SafeFetchError('BLOCKED_ADDRESS'), '', 4);
+function guardedLookup(
+  hostname: string,
+  options: dns.LookupOptions,
+  callback: (err: Error | null, address: string | dns.LookupAddress[], family?: number) => void,
+) {
+  dns.lookup(hostname, { ...options, all: true }, (err, addresses) => {
+    if (err) return callback(err, '', 4);
+    const list = Array.isArray(addresses) ? addresses : [];
+    if (list.length === 0 || list.some((a) => isPrivateOrReservedIp(a.address))) {
+      return callback(new SafeFetchError('BLOCKED_ADDRESS'), '', 4);
+    }
+    if (options.all) return callback(null, list);
+    return callback(null, list[0]!.address, list[0]!.family);
+  });
+}
+
+/** Minimal fetch over node:https (no extra dependency, works on Node 20+) using the guarded lookup. */
+function guardedFetch(
+  url: string,
+  init: { method: string; headers: Record<string, string>; signal: AbortSignal },
+): Promise<Response> {
+  return new Promise<Response>((resolve, reject) => {
+    const u = new URL(url);
+    const req = https.request(
+      {
+        protocol: 'https:',
+        hostname: u.hostname.replace(/^\[|\]$/g, ''),
+        port: 443,
+        path: `${u.pathname}${u.search}`,
+        method: init.method,
+        headers: init.headers,
+        signal: init.signal,
+        lookup: guardedLookup as unknown as https.RequestOptions['lookup'],
+      },
+      (res) => {
+        const headers = new Headers();
+        for (const [k, v] of Object.entries(res.headers)) {
+          if (Array.isArray(v)) v.forEach((x) => headers.append(k, x));
+          else if (v !== undefined) headers.set(k, v);
         }
-        // Honour `all: true` as requested by undici.
-        (callback as unknown as (e: null, a: dns.LookupAddress[]) => void)(null, list);
-      });
-    },
-  },
-});
+        const status = res.statusCode ?? 502;
+        const noBody = status === 204 || status === 205 || status === 304 || init.method === 'HEAD';
+        if (noBody) res.resume();
+        resolve(
+          new Response(
+            noBody ? null : (Readable.toWeb(res) as unknown as ReadableStream<Uint8Array>),
+            {
+              status,
+              headers,
+            },
+          ),
+        );
+      },
+    );
+    req.on('error', reject);
+    req.end();
+  });
+}
 
 async function assertPublicHost(url: URL, lookup: (h: string) => Promise<string[]>) {
   const host = url.hostname.replace(/^\[|\]$/g, '');
@@ -129,14 +172,8 @@ export async function safeFetch(
           method: opts.method ?? 'GET',
           headers: { 'user-agent': 'ReelSave-link-check/1.0', ...opts.headers },
           signal: controller.signal,
-          redirect: 'manual' as const,
         };
-        response = opts.fetchImpl
-          ? await opts.fetchImpl(current.toString(), init)
-          : ((await undiciFetch(current.toString(), {
-              ...init,
-              dispatcher: guardedAgent,
-            })) as unknown as Response);
+        response = await (opts.fetchImpl ?? guardedFetch)(current.toString(), init);
       } catch (err) {
         if (err instanceof SafeFetchError) throw err;
         if (controller.signal.aborted) throw new SafeFetchError('TIMEOUT');
