@@ -1,0 +1,335 @@
+{
+  "nav": {
+    "home": "Home",
+    "tool": "Reels Downloader",
+    "howTo": "How to Download",
+    "blog": "Blog",
+    "faq": "FAQ",
+    "about": "About",
+    "contact": "Contact",
+    "editorial": "Editorial Policy",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "copyright": "Copyright & Takedown",
+    "disclaimer": "Disclaimer",
+    "cookies": "Cookie Policy",
+    "accessibility": "Accessibility",
+    "sitemap": "Sitemap",
+    "main": "Main navigation",
+    "mobile": "Mobile navigation",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "brandHome": "__BRAND__ home page"
+  },
+  "theme": { "toggle": "Toggle light and dark theme" },
+  "language": { "label": "Language" },
+  "footer": {
+    "tagline": "A free tool to check and save supported public Facebook Reels and videos.",
+    "product": "Tool",
+    "company": "Company",
+    "legal": "Legal",
+    "independence": "__BRAND__ is an independent website. It is not affiliated with, endorsed by or sponsored by Facebook or Meta Platforms, Inc. Facebook is a trademark of its respective owner.",
+    "responsibility": "Only download content you own or have permission to save, and follow applicable law and platform rules.",
+    "copyright": "© {year} __BRAND__. All rights reserved."
+  },
+  "common": {
+    "skipToContent": "Skip to main content",
+    "breadcrumb": "Breadcrumb",
+    "minRead": "{minutes} min read",
+    "published": "Published {date}",
+    "updated": "Last reviewed {date}",
+    "readArticle": "Read article",
+    "backToBlog": "Back to all articles",
+    "related": "Keep reading",
+    "tryTool": "Try the downloader",
+    "onThisSite": "On this site"
+  },
+  "meta": {
+    "home": {
+      "title": "Facebook Reels Downloader — Save Videos Online | __BRAND__",
+      "description": "Paste a supported public Facebook Reel or video link to check the available download options. Free, no registration, works on phone and desktop."
+    },
+    "tool": {
+      "title": "Download Facebook Reels — Reel Link Checker | __BRAND__",
+      "description": "Which Facebook Reel links are supported, how to copy them correctly and what to do when a Reel cannot be saved. Includes the __BRAND__ downloader."
+    },
+    "faq": {
+      "title": "Facebook Video Downloader FAQ — Questions Answered | __BRAND__",
+      "description": "Clear answers about supported links, quality, audio, privacy, legality and troubleshooting for the __BRAND__ Facebook Reels and video downloader."
+    },
+    "contact": {
+      "title": "Contact __BRAND__ — Support, Takedown and Privacy Requests",
+      "description": "Send a message to the __BRAND__ team about support, copyright takedown requests, privacy questions or partnerships."
+    },
+    "blog": {
+      "title": "Blog — Guides for Saving Facebook Reels and Videos | __BRAND__",
+      "description": "Practical, original guides on saving supported Facebook Reels and videos, troubleshooting failed downloads, and using videos responsibly."
+    },
+    "sitemap": {
+      "title": "Sitemap — All Pages | __BRAND__",
+      "description": "A complete list of the pages and guides available on __BRAND__."
+    },
+    "notFound": { "title": "Page not found | __BRAND__" },
+    "error": { "title": "Service temporarily unavailable | __BRAND__" }
+  },
+  "downloader": {
+    "label": "Facebook Reel or video link",
+    "placeholder": "https://www.facebook.com/reel/…",
+    "paste": "Paste from clipboard",
+    "clear": "Clear the link",
+    "submit": "Download",
+    "checking": "Checking…",
+    "checkingStatus": "Checking the link. This can take a few seconds.",
+    "resultReady": "Link checked. Download options are available below.",
+    "hint": "Only public videos you have the right to save. We never ask for your Facebook login. The link is sent to our server only when you press Download.",
+    "idleNote": "Paste a link, then press Download to see what is available.",
+    "clipboardFailed": "We could not read your clipboard. Your browser may have blocked access — paste the link into the box manually (Ctrl+V or long-press).",
+    "clipboardEmpty": "Your clipboard is empty. Copy a Facebook link first.",
+    "errorTitle": "We could not get this video",
+    "retry": "Try again",
+    "thumbnailAlt": "Video thumbnail",
+    "untitled": "Untitled video",
+    "duration": "Duration",
+    "formatsLabel": "Available downloads",
+    "video": "Video",
+    "audio": "Audio",
+    "sizeUnknown": "Size not provided",
+    "save": "Save",
+    "expiresAt": "These download links stop working around {time}.",
+    "mockTitle": "Test data",
+    "mockBody": "This result comes from the built-in test provider. It is not a real Facebook video.",
+    "errors": {
+      "EMPTY": "Paste a Facebook Reel or video link first.",
+      "INVALID_URL": "That does not look like a valid link. Copy the full address from Facebook and try again.",
+      "UNSUPPORTED_URL": "This link is not supported. Use a link to a public Facebook Reel or video (facebook.com, m.facebook.com or fb.watch).",
+      "CONTENT_UNAVAILABLE": "This video is unavailable. It may have been deleted or the link may be incomplete.",
+      "PRIVATE_OR_INACCESSIBLE_CONTENT": "This video is private or not publicly accessible, so it cannot be processed. We do not bypass privacy settings.",
+      "NO_SUPPORTED_FORMATS": "The video was found, but no downloadable format is available for it.",
+      "PROVIDER_UNAVAILABLE": "The video service is temporarily unavailable. Please try again in a few minutes.",
+      "RATE_LIMITED": "Too many requests. Please wait about {seconds} seconds and try again.",
+      "REQUEST_TIMEOUT": "The request took too long. Please try again.",
+      "TOKEN_EXPIRED": "The download link has expired. Check the video again to get a fresh link.",
+      "SERVER_CONFIGURATION_ERROR": "Downloading is not available on this site right now because the video service has not been configured.",
+      "INTERNAL_ERROR": "Something went wrong on our side. Please try again later.",
+      "NETWORK_ERROR": "We could not reach the server. Check your internet connection and try again."
+    }
+  },
+  "ads": { "label": "Advertisement" },
+  "consent": {
+    "bannerLabel": "Cookie preferences",
+    "bannerText": "We use optional cookies and similar technologies for analytics and advertising only if you allow them. Essential storage (theme, language, your choice here) is always on.",
+    "acceptAll": "Accept all",
+    "rejectAll": "Reject optional",
+    "manage": "Manage preferences",
+    "settings": "Cookie settings",
+    "policyLink": "Cookie Policy",
+    "preferencesTitle": "Cookie and storage preferences",
+    "preferencesIntro": "Choose which optional categories you allow. You can change this at any time from the footer.",
+    "onlyEssential": "This site currently uses only essential browser storage. No analytics or advertising technologies are active.",
+    "essentialTitle": "Essential",
+    "essentialDescription": "Remembers your theme, your language and your cookie choice in your browser. Always on; it does not track you across sites.",
+    "analyticsTitle": "Analytics",
+    "analyticsDescription": "Anonymous, aggregated usage statistics that help us improve the site.",
+    "advertisingTitle": "Advertising",
+    "advertisingDescription": "Allows Google AdSense to load and show ads, which may use cookies or similar technologies.",
+    "save": "Save preferences",
+    "close": "Close"
+  },
+  "home": {
+    "hero": {
+      "h1": "Facebook Reels Downloader — Save Videos Online",
+      "subtitle": "Paste a supported public Facebook Reel or video link to check available download options in a few simple steps.",
+      "badges": ["No registration", "Free to use", "Phone, tablet and desktop"]
+    },
+    "steps": {
+      "title": "How it works in three steps",
+      "items": [
+        { "title": "Copy the link", "text": "In Facebook, open the Reel or video, tap Share and choose Copy link. On a computer, copy the address from the browser bar." },
+        { "title": "Paste and press Download", "text": "Paste the link above and press Download. The link is checked on our server only when you press the button." },
+        { "title": "Choose an option and save", "text": "If download options are available, pick one and save the file to your device. Only formats that really exist are shown." }
+      ]
+    },
+    "features": {
+      "title": "Built to be simple and honest",
+      "items": [
+        { "title": "No account needed", "text": "Use the tool without signing up. We never ask for your Facebook password, cookies or login." },
+        { "title": "Real options only", "text": "HD, SD or audio appear only when they are actually available for that video. Nothing is promised in advance." },
+        { "title": "Made for phones", "text": "A clean, fast, mobile-first layout that also works well on tablets and desktop computers." },
+        { "title": "Four languages", "text": "Use the site in English, French, Spanish or Arabic, with full right-to-left support for Arabic." },
+        { "title": "Light and dark themes", "text": "Follows your device setting by default and remembers your choice if you change it." },
+        { "title": "Clear explanations", "text": "When something fails, you get a plain-language reason and a next step instead of a vague error." }
+      ]
+    },
+    "support": {
+      "title": "Supported content and limitations",
+      "intro": "The tool is designed for content that is publicly available and that you are allowed to save.",
+      "supportedTitle": "What works",
+      "supported": [
+        "Public Facebook Reels (links like facebook.com/reel/…)",
+        "Public videos on Pages and profiles (facebook.com/…/videos/…)",
+        "Public Facebook Watch videos (facebook.com/watch/?v=…)",
+        "Short links (fb.watch/…) and share links (facebook.com/share/…)"
+      ],
+      "unsupportedTitle": "What will not work",
+      "unsupported": [
+        "Private, friends-only, group-only or age-restricted videos",
+        "Videos that were deleted or whose owner removed access",
+        "Videos for which no downloadable format is available",
+        "Anything that would require logging in or bypassing a protection"
+      ],
+      "note": "Availability also depends on the video service connected to this site. Not every public video can be downloaded."
+    },
+    "devices": {
+      "title": "Works on any device",
+      "intro": "You only need a modern browser. Here is the short version for each device; the guides in the blog go into more detail.",
+      "android": {
+        "title": "Android",
+        "steps": [
+          "In the Facebook app, tap Share on the Reel and choose Copy link.",
+          "Open Chrome (or another browser) and go to this site.",
+          "Paste the link, press Download, then pick an option.",
+          "Find the file in the Files app under Downloads."
+        ]
+      },
+      "iphone": {
+        "title": "iPhone and iPad",
+        "steps": [
+          "In the Facebook app, tap Share on the Reel and choose Copy link.",
+          "Open Safari and go to this site.",
+          "Paste the link, press Download, then confirm the download.",
+          "Open the Files app, go to Downloads, and use Share → Save Video if you want it in Photos."
+        ]
+      },
+      "desktop": {
+        "title": "Windows, Mac and Linux",
+        "steps": [
+          "Open the Reel or video in your browser and copy the address from the address bar.",
+          "Paste it into the box above and press Download.",
+          "Choose an option; the file goes to your browser's Downloads folder."
+        ]
+      },
+      "more": "Detailed walkthrough"
+    },
+    "troubleshooting": {
+      "title": "If something goes wrong",
+      "items": [
+        { "title": "\"Private or inaccessible\"", "text": "Only public videos can be processed. If you can only see the video while logged in, or only friends can see it, it cannot be downloaded here." },
+        { "title": "\"Unavailable\" or \"invalid link\"", "text": "Copy the complete link again with the Share → Copy link option. Cut-off links and links with extra text often fail." },
+        { "title": "\"No downloadable format\"", "text": "Some videos simply expose no downloadable file. Try again later; if it keeps happening there is nothing we can do for that video." },
+        { "title": "\"Service temporarily unavailable\" or \"too many requests\"", "text": "Wait a minute and try once more. Repeated rapid attempts trigger a temporary limit that protects the service." },
+        { "title": "The download link expired", "text": "Download links last only a short time. Press Download again to get a fresh one." }
+      ],
+      "more": "Read the full troubleshooting guide"
+    },
+    "responsible": {
+      "title": "Privacy and responsible use",
+      "paragraphs": [
+        "Videos belong to their creators. Save only what you own, what is clearly offered for download, or what you have permission to keep, and do not re-upload or sell other people's work.",
+        "We do not ask for Facebook credentials and we do not retain the videos you download. Like any website, our hosting and security systems may process technical data such as IP addresses; the Privacy Policy explains exactly what."
+      ],
+      "link": "Read the Privacy Policy",
+      "copyrightLink": "Copyright and takedown requests"
+    },
+    "faq": { "title": "Frequently asked questions", "more": "See all questions" },
+    "articles": { "title": "Guides and articles", "all": "All articles" }
+  },
+  "faq": {
+    "items": [
+      { "q": "Is the downloader free?", "a": "Yes. You can use the tool without paying or creating an account. The site may be supported by advertising, which never replaces or imitates the download controls." },
+      { "q": "Which Facebook links are supported?", "a": "Links to public Reels (facebook.com/reel/…), public videos (facebook.com/…/videos/…, facebook.com/watch/?v=…), share links (facebook.com/share/…) and short fb.watch links. Links from other websites are rejected." },
+      { "q": "Can I download private videos?", "a": "No. Videos that are private, friends-only, in private groups or otherwise protected cannot be processed, and we never try to bypass privacy settings or login requirements." },
+      { "q": "Why does it say the video is unavailable?", "a": "The video may have been deleted, the owner may have changed its privacy, or the copied link may be incomplete. Copy the link again using Share → Copy link and retry." },
+      { "q": "Will I always get HD quality?", "a": "No. Quality depends on what Facebook makes available for that specific video. HD, SD or other options appear only when they genuinely exist." },
+      { "q": "Can I get just the audio (MP3)?", "a": "Only if an audio option is shown in the results for your video. It is not available for every video, and you should extract audio only from content you are authorized to use." },
+      { "q": "Do I need to log in to Facebook or share my password?", "a": "Never. Do not enter your Facebook password, cookies or tokens on this site. Legitimate use of the tool does not require any of them." },
+      { "q": "Where is the file saved on my phone?", "a": "On Android it normally goes to the Downloads folder (Files app). On iPhone and iPad, Safari saves it in Files → Downloads, from where you can share it to Photos." },
+      { "q": "How do I download on iPhone?", "a": "Copy the link in the Facebook app, open this site in Safari, paste the link, press Download and confirm. Our iPhone guide in the blog covers each step." },
+      { "q": "Is downloading Facebook videos legal?", "a": "It depends on the video, how you use it and the laws where you live. Personal copies of your own content are generally fine; reposting other people's videos without permission may infringe copyright. This is general information, not legal advice." },
+      { "q": "Do you store my links or the videos I download?", "a": "We do not keep the video files. Files pass through our server only while being delivered, and results are cached in memory for a few minutes. Hosting and security logs may record technical data such as IP addresses. See the Privacy Policy for details." },
+      { "q": "Why did my download link stop working?", "a": "Download links are deliberately short-lived (about 15 minutes) for security. Press Download on the video again to get a new one." },
+      { "q": "Is this site affiliated with Facebook or Meta?", "a": "No. __BRAND__ is an independent website and is not affiliated with, endorsed by or sponsored by Facebook or Meta Platforms, Inc." },
+      { "q": "How do I report content or request removal?", "a": "Use the Copyright & Takedown page and the contact form. Include the information listed there so that we can review your request." }
+    ]
+  },
+  "reels": {
+    "h1": "Download Facebook Reels",
+    "intro": "Facebook Reels are short public videos. Paste a Reel link below to check whether it can be saved. This page explains which Reel links work and how to copy them correctly.",
+    "linksTitle": "Reel links that work",
+    "linksIntro": "The tool recognises these public link shapes. Examples are patterns, not real videos.",
+    "patterns": [
+      { "label": "Reel", "example": "facebook.com/reel/1234567890" },
+      { "label": "Shared Reel", "example": "facebook.com/share/r/AbCdEf123/" },
+      { "label": "Short link", "example": "fb.watch/AbCdEf123/" },
+      { "label": "Watch video", "example": "facebook.com/watch/?v=1234567890" }
+    ],
+    "copyTitle": "How to copy a Reel link",
+    "copySteps": [
+      "Open the Reel in the Facebook app or website.",
+      "Tap or click Share (the arrow icon).",
+      "Choose Copy link.",
+      "Paste it into the downloader and press Download."
+    ],
+    "limitsTitle": "When a Reel cannot be saved",
+    "limits": [
+      "The Reel is private, friends-only or restricted to an audience you are not part of.",
+      "The creator deleted it or the link is incomplete.",
+      "The video service connected to this site cannot provide a downloadable file for it."
+    ],
+    "moreTitle": "More help",
+    "moreLinks": { "howTo": "Step-by-step guide", "faq": "Frequently asked questions" }
+  },
+  "contact": {
+    "h1": "Contact us",
+    "intro": "Use this form for support, copyright or privacy requests, bug reports or partnership questions. We read every message, but we cannot promise a reply time.",
+    "name": "Your name",
+    "email": "Your email address",
+    "type": "What is this about?",
+    "message": "Message",
+    "submit": "Send message",
+    "sending": "Sending…",
+    "types": {
+      "general": "General question",
+      "support": "Help using the tool",
+      "copyright": "Copyright or takedown request",
+      "privacy": "Privacy request",
+      "partnership": "Partnership or advertising",
+      "bug": "Report a problem"
+    },
+    "errors": {
+      "name": "Enter your name (at least 2 characters).",
+      "email": "Enter a valid email address.",
+      "message": "Write a message of at least 10 characters.",
+      "summary": "Please fix the highlighted fields.",
+      "rate": "You have sent several messages recently. Please try again later.",
+      "unavailable": "The contact form is not available right now. Please try again later.",
+      "generic": "We could not send your message. Please try again."
+    },
+    "success": "Thank you. Your message has been sent.",
+    "notice": "Do not send passwords or Facebook login details. For copyright requests, include the information listed on the Copyright & Takedown page.",
+    "directEmail": "You can also write to"
+  },
+  "blog": {
+    "h1": "Guides and articles",
+    "intro": "Original, practical guides on saving supported Facebook Reels and videos, fixing problems and using content responsibly.",
+    "editorialNote": "How we write and review articles"
+  },
+  "sitemapPage": {
+    "h1": "Sitemap",
+    "intro": "Every page on this site, in one place.",
+    "tool": "Tool and guides",
+    "articles": "Articles",
+    "company": "About and contact",
+    "legal": "Legal and policies"
+  },
+  "notFound": {
+    "h1": "Page not found",
+    "text": "The page you are looking for does not exist or has moved. Here are some places to continue.",
+    "suggested": "Suggested pages"
+  },
+  "error": {
+    "h1": "Service temporarily unavailable",
+    "text": "Something went wrong while loading this page. This is usually temporary. Please try again in a moment.",
+    "retry": "Try again",
+    "home": "Go to the homepage"
+  }
+}

@@ -1,0 +1,335 @@
+{
+  "nav": {
+    "home": "Accueil",
+    "tool": "Télécharger des Reels",
+    "howTo": "Comment télécharger",
+    "blog": "Blog",
+    "faq": "FAQ",
+    "about": "À propos",
+    "contact": "Contact",
+    "editorial": "Politique éditoriale",
+    "privacy": "Politique de confidentialité",
+    "terms": "Conditions d'utilisation",
+    "copyright": "Droits d'auteur et retrait",
+    "disclaimer": "Avertissement",
+    "cookies": "Politique de cookies",
+    "accessibility": "Accessibilité",
+    "sitemap": "Plan du site",
+    "main": "Navigation principale",
+    "mobile": "Navigation mobile",
+    "openMenu": "Ouvrir le menu",
+    "closeMenu": "Fermer le menu",
+    "brandHome": "page d'accueil de __BRAND__"
+  },
+  "theme": { "toggle": "Basculer entre le thème clair et le thème sombre" },
+  "language": { "label": "Langue" },
+  "footer": {
+    "tagline": "Un outil gratuit pour vérifier et enregistrer les Reels et vidéos Facebook publics pris en charge.",
+    "product": "Outil",
+    "company": "Entreprise",
+    "legal": "Mentions légales",
+    "independence": "__BRAND__ est un site indépendant. Il n'est ni affilié à Facebook ou Meta Platforms, Inc., ni approuvé ou sponsorisé par ces sociétés. Facebook est une marque de son propriétaire.",
+    "responsibility": "Ne téléchargez que des contenus dont vous êtes l'auteur ou que vous avez le droit d'enregistrer, dans le respect de la loi et des règles de la plateforme.",
+    "copyright": "© {year} __BRAND__. Tous droits réservés."
+  },
+  "common": {
+    "skipToContent": "Aller au contenu principal",
+    "breadcrumb": "Fil d'Ariane",
+    "minRead": "{minutes} min de lecture",
+    "published": "Publié le {date}",
+    "updated": "Dernière vérification : {date}",
+    "readArticle": "Lire l'article",
+    "backToBlog": "Retour à tous les articles",
+    "related": "Pour aller plus loin",
+    "tryTool": "Essayer le téléchargeur",
+    "onThisSite": "Sur ce site"
+  },
+  "meta": {
+    "home": {
+      "title": "Télécharger Reels Facebook — Enregistrer des vidéos en ligne | __BRAND__",
+      "description": "Collez le lien d'un Reel ou d'une vidéo Facebook publique pour voir les options de téléchargement disponibles. Gratuit, sans inscription, sur mobile comme sur ordinateur."
+    },
+    "tool": {
+      "title": "Télécharger des Reels Facebook — Vérifier un lien de Reel | __BRAND__",
+      "description": "Quels liens de Reels Facebook sont pris en charge, comment les copier correctement et que faire quand un Reel ne peut pas être enregistré. Avec le téléchargeur __BRAND__."
+    },
+    "faq": {
+      "title": "FAQ du téléchargeur de vidéos Facebook — Vos questions | __BRAND__",
+      "description": "Des réponses claires sur les liens pris en charge, la qualité, l'audio, la confidentialité, la légalité et le dépannage pour le téléchargeur de Reels et vidéos Facebook __BRAND__."
+    },
+    "contact": {
+      "title": "Contacter __BRAND__ — Assistance, retrait et confidentialité",
+      "description": "Écrivez à l'équipe de __BRAND__ pour une demande d'aide, un retrait pour atteinte aux droits d'auteur, une question de confidentialité ou un partenariat."
+    },
+    "blog": {
+      "title": "Blog — Guides pour enregistrer des Reels et vidéos Facebook | __BRAND__",
+      "description": "Des guides pratiques et originaux pour enregistrer les Reels et vidéos Facebook pris en charge, résoudre les échecs de téléchargement et utiliser les vidéos de façon responsable."
+    },
+    "sitemap": {
+      "title": "Plan du site — Toutes les pages | __BRAND__",
+      "description": "La liste complète des pages et des guides disponibles sur __BRAND__."
+    },
+    "notFound": { "title": "Page introuvable | __BRAND__" },
+    "error": { "title": "Service temporairement indisponible | __BRAND__" }
+  },
+  "downloader": {
+    "label": "Lien du Reel ou de la vidéo Facebook",
+    "placeholder": "https://www.facebook.com/reel/…",
+    "paste": "Coller depuis le presse-papiers",
+    "clear": "Effacer le lien",
+    "submit": "Télécharger",
+    "checking": "Vérification…",
+    "checkingStatus": "Vérification du lien en cours. Cela peut prendre quelques secondes.",
+    "resultReady": "Lien vérifié. Les options de téléchargement sont disponibles ci-dessous.",
+    "hint": "Uniquement des vidéos publiques que vous avez le droit d'enregistrer. Nous ne demandons jamais votre identifiant Facebook. Le lien n'est envoyé à notre serveur que lorsque vous appuyez sur Télécharger.",
+    "idleNote": "Collez un lien, puis appuyez sur Télécharger pour voir ce qui est disponible.",
+    "clipboardFailed": "Impossible de lire votre presse-papiers. Votre navigateur a peut-être bloqué l'accès : collez le lien manuellement dans le champ (Ctrl+V ou appui prolongé).",
+    "clipboardEmpty": "Votre presse-papiers est vide. Copiez d'abord un lien Facebook.",
+    "errorTitle": "Impossible de récupérer cette vidéo",
+    "retry": "Réessayer",
+    "thumbnailAlt": "Miniature de la vidéo",
+    "untitled": "Vidéo sans titre",
+    "duration": "Durée",
+    "formatsLabel": "Téléchargements disponibles",
+    "video": "Vidéo",
+    "audio": "Audio",
+    "sizeUnknown": "Taille non communiquée",
+    "save": "Enregistrer",
+    "expiresAt": "Ces liens de téléchargement cessent de fonctionner vers {time}.",
+    "mockTitle": "Données de test",
+    "mockBody": "Ce résultat provient du fournisseur de test intégré. Ce n'est pas une vraie vidéo Facebook.",
+    "errors": {
+      "EMPTY": "Collez d'abord le lien d'un Reel ou d'une vidéo Facebook.",
+      "INVALID_URL": "Ce lien ne semble pas valide. Copiez l'adresse complète depuis Facebook et réessayez.",
+      "UNSUPPORTED_URL": "Ce lien n'est pas pris en charge. Utilisez le lien d'un Reel ou d'une vidéo Facebook public (facebook.com, m.facebook.com ou fb.watch).",
+      "CONTENT_UNAVAILABLE": "Cette vidéo est indisponible. Elle a peut-être été supprimée ou le lien est incomplet.",
+      "PRIVATE_OR_INACCESSIBLE_CONTENT": "Cette vidéo est privée ou n'est pas accessible publiquement : elle ne peut pas être traitée. Nous ne contournons pas les paramètres de confidentialité.",
+      "NO_SUPPORTED_FORMATS": "La vidéo a été trouvée, mais aucun format téléchargeable n'est disponible pour elle.",
+      "PROVIDER_UNAVAILABLE": "Le service vidéo est temporairement indisponible. Réessayez dans quelques minutes.",
+      "RATE_LIMITED": "Trop de requêtes. Patientez environ {seconds} secondes, puis réessayez.",
+      "REQUEST_TIMEOUT": "La requête a pris trop de temps. Veuillez réessayer.",
+      "TOKEN_EXPIRED": "Le lien de téléchargement a expiré. Vérifiez de nouveau la vidéo pour obtenir un lien valide.",
+      "SERVER_CONFIGURATION_ERROR": "Le téléchargement n'est pas disponible sur ce site pour le moment, car le service vidéo n'a pas été configuré.",
+      "INTERNAL_ERROR": "Une erreur est survenue de notre côté. Veuillez réessayer plus tard.",
+      "NETWORK_ERROR": "Impossible de joindre le serveur. Vérifiez votre connexion internet et réessayez."
+    }
+  },
+  "ads": { "label": "Publicité" },
+  "consent": {
+    "bannerLabel": "Préférences relatives aux cookies",
+    "bannerText": "Nous n'utilisons de cookies et technologies similaires facultatifs pour l'analyse d'audience et la publicité que si vous les autorisez. Le stockage essentiel (thème, langue, votre choix ici) est toujours actif.",
+    "acceptAll": "Tout accepter",
+    "rejectAll": "Refuser les cookies facultatifs",
+    "manage": "Gérer mes préférences",
+    "settings": "Paramètres des cookies",
+    "policyLink": "Politique de cookies",
+    "preferencesTitle": "Préférences de cookies et de stockage",
+    "preferencesIntro": "Choisissez les catégories facultatives que vous autorisez. Vous pouvez modifier ce choix à tout moment depuis le pied de page.",
+    "onlyEssential": "Ce site n'utilise actuellement que le stockage essentiel du navigateur. Aucune technologie d'analyse ou de publicité n'est active.",
+    "essentialTitle": "Essentiel",
+    "essentialDescription": "Mémorise dans votre navigateur votre thème, votre langue et votre choix en matière de cookies. Toujours actif ; ne vous suit pas d'un site à l'autre.",
+    "analyticsTitle": "Mesure d'audience",
+    "analyticsDescription": "Statistiques d'utilisation anonymes et agrégées qui nous aident à améliorer le site.",
+    "advertisingTitle": "Publicité",
+    "advertisingDescription": "Autorise Google AdSense à se charger et à afficher des annonces, qui peuvent utiliser des cookies ou des technologies similaires.",
+    "save": "Enregistrer mes préférences",
+    "close": "Fermer"
+  },
+  "home": {
+    "hero": {
+      "h1": "Télécharger Reels Facebook — Enregistrez vos vidéos en ligne",
+      "subtitle": "Collez le lien d'un Reel ou d'une vidéo Facebook publique pris en charge et découvrez en quelques étapes simples les options de téléchargement disponibles.",
+      "badges": ["Sans inscription", "Gratuit", "Mobile, tablette et ordinateur"]
+    },
+    "steps": {
+      "title": "Comment ça marche en trois étapes",
+      "items": [
+        { "title": "Copiez le lien", "text": "Dans Facebook, ouvrez le Reel ou la vidéo, touchez Partager puis Copier le lien. Sur ordinateur, copiez l'adresse de la barre du navigateur." },
+        { "title": "Collez-le et appuyez sur Télécharger", "text": "Collez le lien ci-dessus puis appuyez sur Télécharger. Le lien n'est vérifié sur notre serveur que lorsque vous appuyez sur le bouton." },
+        { "title": "Choisissez une option et enregistrez", "text": "Si des options sont disponibles, choisissez-en une et enregistrez le fichier sur votre appareil. Seuls les formats qui existent réellement sont affichés." }
+      ]
+    },
+    "features": {
+      "title": "Conçu pour être simple et honnête",
+      "items": [
+        { "title": "Aucun compte requis", "text": "Utilisez l'outil sans vous inscrire. Nous ne demandons jamais votre mot de passe, vos cookies ou votre connexion Facebook." },
+        { "title": "Uniquement des options réelles", "text": "HD, SD ou audio n'apparaissent que s'ils sont réellement disponibles pour cette vidéo. Rien n'est promis à l'avance." },
+        { "title": "Pensé pour le mobile", "text": "Une interface claire, rapide et pensée d'abord pour les téléphones, qui fonctionne aussi très bien sur tablette et sur ordinateur." },
+        { "title": "Quatre langues", "text": "Utilisez le site en français, anglais, espagnol ou arabe, avec une prise en charge complète de l'écriture de droite à gauche pour l'arabe." },
+        { "title": "Thèmes clair et sombre", "text": "Suit par défaut le réglage de votre appareil et mémorise votre choix si vous le modifiez." },
+        { "title": "Des explications claires", "text": "Quand quelque chose échoue, vous obtenez une raison en langage simple et une piste à suivre, plutôt qu'une erreur vague." }
+      ]
+    },
+    "support": {
+      "title": "Contenus pris en charge et limites",
+      "intro": "L'outil est conçu pour les contenus publics que vous avez le droit d'enregistrer.",
+      "supportedTitle": "Ce qui fonctionne",
+      "supported": [
+        "Reels Facebook publics (liens du type facebook.com/reel/…)",
+        "Vidéos publiques de Pages et de profils (facebook.com/…/videos/…)",
+        "Vidéos publiques Facebook Watch (facebook.com/watch/?v=…)",
+        "Liens courts (fb.watch/…) et liens de partage (facebook.com/share/…)"
+      ],
+      "unsupportedTitle": "Ce qui ne fonctionnera pas",
+      "unsupported": [
+        "Vidéos privées, réservées aux amis, aux groupes ou soumises à une restriction d'âge",
+        "Vidéos supprimées ou dont le propriétaire a retiré l'accès",
+        "Vidéos pour lesquelles aucun format téléchargeable n'est disponible",
+        "Tout ce qui exigerait de se connecter ou de contourner une protection"
+      ],
+      "note": "La disponibilité dépend aussi du service vidéo relié à ce site. Toutes les vidéos publiques ne peuvent pas être téléchargées."
+    },
+    "devices": {
+      "title": "Fonctionne sur tous les appareils",
+      "intro": "Il suffit d'un navigateur récent. Voici la version courte pour chaque appareil ; les guides du blog détaillent chaque étape.",
+      "android": {
+        "title": "Android",
+        "steps": [
+          "Dans l'application Facebook, touchez Partager sur le Reel puis Copier le lien.",
+          "Ouvrez Chrome (ou un autre navigateur) et rendez-vous sur ce site.",
+          "Collez le lien, appuyez sur Télécharger puis choisissez une option.",
+          "Retrouvez le fichier dans l'application Fichiers, dans Téléchargements."
+        ]
+      },
+      "iphone": {
+        "title": "iPhone et iPad",
+        "steps": [
+          "Dans l'application Facebook, touchez Partager sur le Reel puis Copier le lien.",
+          "Ouvrez Safari et rendez-vous sur ce site.",
+          "Collez le lien, appuyez sur Télécharger puis confirmez le téléchargement.",
+          "Ouvrez l'application Fichiers, allez dans Téléchargements et utilisez Partager → Enregistrer la vidéo pour l'ajouter à Photos."
+        ]
+      },
+      "desktop": {
+        "title": "Windows, Mac et Linux",
+        "steps": [
+          "Ouvrez le Reel ou la vidéo dans votre navigateur et copiez l'adresse dans la barre d'adresse.",
+          "Collez-la dans le champ ci-dessus et appuyez sur Télécharger.",
+          "Choisissez une option ; le fichier arrive dans le dossier Téléchargements de votre navigateur."
+        ]
+      },
+      "more": "Guide détaillé"
+    },
+    "troubleshooting": {
+      "title": "En cas de problème",
+      "items": [
+        { "title": "« Privé ou inaccessible »", "text": "Seules les vidéos publiques peuvent être traitées. Si vous ne voyez la vidéo qu'une fois connecté, ou si seuls vos amis la voient, elle ne peut pas être téléchargée ici." },
+        { "title": "« Indisponible » ou « lien invalide »", "text": "Copiez à nouveau le lien complet avec l'option Partager → Copier le lien. Les liens tronqués ou accompagnés de texte superflu échouent souvent." },
+        { "title": "« Aucun format téléchargeable »", "text": "Certaines vidéos n'exposent tout simplement aucun fichier à télécharger. Réessayez plus tard ; si le problème persiste, nous ne pouvons rien faire pour cette vidéo." },
+        { "title": "« Service temporairement indisponible » ou « trop de requêtes »", "text": "Patientez une minute puis réessayez une fois. Des tentatives rapprochées déclenchent une limite temporaire qui protège le service." },
+        { "title": "Le lien de téléchargement a expiré", "text": "Les liens de téléchargement ne durent que peu de temps. Appuyez de nouveau sur Télécharger pour en obtenir un nouveau." }
+      ],
+      "more": "Lire le guide de dépannage complet"
+    },
+    "responsible": {
+      "title": "Confidentialité et usage responsable",
+      "paragraphs": [
+        "Les vidéos appartiennent à leurs créateurs. N'enregistrez que ce qui vous appartient, ce qui est clairement proposé au téléchargement ou ce que vous avez l'autorisation de conserver, et ne republiez ni ne vendez le travail d'autrui.",
+        "Nous ne demandons pas d'identifiants Facebook et nous ne conservons pas les vidéos que vous téléchargez. Comme tout site web, notre hébergement et nos systèmes de sécurité peuvent traiter des données techniques telles que les adresses IP ; la Politique de confidentialité explique précisément lesquelles."
+      ],
+      "link": "Lire la Politique de confidentialité",
+      "copyrightLink": "Droits d'auteur et demandes de retrait"
+    },
+    "faq": { "title": "Questions fréquentes", "more": "Voir toutes les questions" },
+    "articles": { "title": "Guides et articles", "all": "Tous les articles" }
+  },
+  "faq": {
+    "items": [
+      { "q": "Le téléchargeur est-il gratuit ?", "a": "Oui. Vous pouvez utiliser l'outil sans payer ni créer de compte. Le site peut être financé par de la publicité, qui ne remplace ni n'imite jamais les boutons de téléchargement." },
+      { "q": "Quels liens Facebook sont pris en charge ?", "a": "Les liens de Reels publics (facebook.com/reel/…), de vidéos publiques (facebook.com/…/videos/…, facebook.com/watch/?v=…), les liens de partage (facebook.com/share/…) et les liens courts fb.watch. Les liens d'autres sites sont refusés." },
+      { "q": "Puis-je télécharger des vidéos privées ?", "a": "Non. Les vidéos privées, réservées aux amis, publiées dans des groupes privés ou autrement protégées ne peuvent pas être traitées, et nous ne cherchons jamais à contourner les paramètres de confidentialité ni les connexions obligatoires." },
+      { "q": "Pourquoi la vidéo est-elle indiquée comme indisponible ?", "a": "La vidéo a peut-être été supprimée, son propriétaire a peut-être modifié sa confidentialité, ou le lien copié est incomplet. Copiez de nouveau le lien avec Partager → Copier le lien et réessayez." },
+      { "q": "Aurai-je toujours la qualité HD ?", "a": "Non. La qualité dépend de ce que Facebook met à disposition pour cette vidéo précise. Les options HD, SD ou autres n'apparaissent que si elles existent réellement." },
+      { "q": "Puis-je récupérer uniquement l'audio (MP3) ?", "a": "Seulement si une option audio s'affiche dans les résultats pour votre vidéo. Elle n'existe pas pour toutes les vidéos, et vous ne devez extraire l'audio que de contenus que vous avez le droit d'utiliser." },
+      { "q": "Dois-je me connecter à Facebook ou donner mon mot de passe ?", "a": "Jamais. Ne saisissez pas votre mot de passe, vos cookies ou vos jetons Facebook sur ce site. Une utilisation légitime de l'outil n'en nécessite aucun." },
+      { "q": "Où le fichier est-il enregistré sur mon téléphone ?", "a": "Sur Android, il va normalement dans le dossier Téléchargements (application Fichiers). Sur iPhone et iPad, Safari l'enregistre dans Fichiers → Téléchargements, d'où vous pouvez le partager vers Photos." },
+      { "q": "Comment télécharger sur iPhone ?", "a": "Copiez le lien dans l'application Facebook, ouvrez ce site dans Safari, collez le lien, appuyez sur Télécharger et confirmez. Notre guide iPhone du blog détaille chaque étape." },
+      { "q": "Télécharger des vidéos Facebook est-il légal ?", "a": "Cela dépend de la vidéo, de l'usage que vous en faites et des lois de votre pays. Conserver une copie de vos propres contenus ne pose en général pas de problème ; republier la vidéo d'autrui sans autorisation peut porter atteinte au droit d'auteur. Il s'agit d'informations générales, pas de conseils juridiques." },
+      { "q": "Conservez-vous mes liens ou les vidéos que je télécharge ?", "a": "Nous ne conservons pas les fichiers vidéo. Ils ne transitent par notre serveur que le temps de leur livraison, et les résultats sont gardés en mémoire quelques minutes. Les journaux de l'hébergeur et de sécurité peuvent enregistrer des données techniques comme les adresses IP. Consultez la Politique de confidentialité pour les détails." },
+      { "q": "Pourquoi mon lien de téléchargement ne fonctionne-t-il plus ?", "a": "Les liens de téléchargement sont volontairement de courte durée (environ 15 minutes) pour des raisons de sécurité. Appuyez de nouveau sur Télécharger pour la vidéo afin d'en obtenir un nouveau." },
+      { "q": "Ce site est-il affilié à Facebook ou à Meta ?", "a": "Non. __BRAND__ est un site indépendant, qui n'est ni affilié à Facebook ou Meta Platforms, Inc., ni approuvé ou sponsorisé par ces sociétés." },
+      { "q": "Comment signaler un contenu ou demander un retrait ?", "a": "Utilisez la page Droits d'auteur et retrait ainsi que le formulaire de contact. Joignez les informations qui y sont listées afin que nous puissions examiner votre demande." }
+    ]
+  },
+  "reels": {
+    "h1": "Télécharger des Reels Facebook",
+    "intro": "Les Reels Facebook sont de courtes vidéos publiques. Collez ci-dessous le lien d'un Reel pour vérifier s'il peut être enregistré. Cette page explique quels liens de Reels fonctionnent et comment les copier correctement.",
+    "linksTitle": "Les liens de Reels qui fonctionnent",
+    "linksIntro": "L'outil reconnaît ces formes de liens publics. Les exemples sont des modèles, pas de vraies vidéos.",
+    "patterns": [
+      { "label": "Reel", "example": "facebook.com/reel/1234567890" },
+      { "label": "Reel partagé", "example": "facebook.com/share/r/AbCdEf123/" },
+      { "label": "Lien court", "example": "fb.watch/AbCdEf123/" },
+      { "label": "Vidéo Watch", "example": "facebook.com/watch/?v=1234567890" }
+    ],
+    "copyTitle": "Comment copier le lien d'un Reel",
+    "copySteps": [
+      "Ouvrez le Reel dans l'application ou sur le site Facebook.",
+      "Touchez ou cliquez sur Partager (l'icône en forme de flèche).",
+      "Choisissez Copier le lien.",
+      "Collez-le dans le téléchargeur et appuyez sur Télécharger."
+    ],
+    "limitsTitle": "Quand un Reel ne peut pas être enregistré",
+    "limits": [
+      "Le Reel est privé, réservé aux amis ou limité à un public dont vous ne faites pas partie.",
+      "Le créateur l'a supprimé ou le lien est incomplet.",
+      "Le service vidéo relié à ce site ne peut fournir aucun fichier téléchargeable pour ce Reel."
+    ],
+    "moreTitle": "Plus d'aide",
+    "moreLinks": { "howTo": "Guide pas à pas", "faq": "Questions fréquentes" }
+  },
+  "contact": {
+    "h1": "Nous contacter",
+    "intro": "Utilisez ce formulaire pour une demande d'aide, une demande relative aux droits d'auteur ou à la confidentialité, un signalement de bug ou une proposition de partenariat. Nous lisons chaque message, mais nous ne pouvons pas promettre de délai de réponse.",
+    "name": "Votre nom",
+    "email": "Votre adresse e-mail",
+    "type": "Quel est le sujet ?",
+    "message": "Message",
+    "submit": "Envoyer le message",
+    "sending": "Envoi en cours…",
+    "types": {
+      "general": "Question générale",
+      "support": "Aide pour utiliser l'outil",
+      "copyright": "Droits d'auteur ou demande de retrait",
+      "privacy": "Demande relative à la confidentialité",
+      "partnership": "Partenariat ou publicité",
+      "bug": "Signaler un problème"
+    },
+    "errors": {
+      "name": "Saisissez votre nom (2 caractères minimum).",
+      "email": "Saisissez une adresse e-mail valide.",
+      "message": "Rédigez un message d'au moins 10 caractères.",
+      "summary": "Veuillez corriger les champs signalés.",
+      "rate": "Vous avez envoyé plusieurs messages récemment. Veuillez réessayer plus tard.",
+      "unavailable": "Le formulaire de contact n'est pas disponible pour le moment. Veuillez réessayer plus tard.",
+      "generic": "Impossible d'envoyer votre message. Veuillez réessayer."
+    },
+    "success": "Merci. Votre message a bien été envoyé.",
+    "notice": "N'envoyez ni mots de passe ni identifiants Facebook. Pour une demande de retrait, joignez les informations listées sur la page Droits d'auteur et retrait.",
+    "directEmail": "Vous pouvez aussi écrire à"
+  },
+  "blog": {
+    "h1": "Guides et articles",
+    "intro": "Des guides pratiques et originaux pour enregistrer les Reels et vidéos Facebook pris en charge, résoudre les problèmes et utiliser les contenus de façon responsable.",
+    "editorialNote": "Comment nous rédigeons et relisons nos articles"
+  },
+  "sitemapPage": {
+    "h1": "Plan du site",
+    "intro": "Toutes les pages du site, au même endroit.",
+    "tool": "Outil et guides",
+    "articles": "Articles",
+    "company": "À propos et contact",
+    "legal": "Mentions légales et politiques"
+  },
+  "notFound": {
+    "h1": "Page introuvable",
+    "text": "La page que vous cherchez n'existe pas ou a été déplacée. Voici quelques pistes pour continuer.",
+    "suggested": "Pages suggérées"
+  },
+  "error": {
+    "h1": "Service temporairement indisponible",
+    "text": "Un problème est survenu lors du chargement de cette page. Il est généralement temporaire. Veuillez réessayer dans un instant.",
+    "retry": "Réessayer",
+    "home": "Aller à l'accueil"
+  }
+}
