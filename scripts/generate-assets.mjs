@@ -1,42 +1,38 @@
-// Renders brand icons and the social preview image from inline SVG/HTML using Playwright.
+// Renders brand icons and the social preview image from the logo SVG using Playwright.
+// Run: node scripts/generate-assets.mjs
 import { chromium } from 'playwright';
 import fs from 'node:fs';
 
-const mark = (size, pad = 0, radius = 9) => `
-<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 32 32">
-  <defs><linearGradient id="g" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse"><stop stop-color="#2563EB"/><stop offset="1" stop-color="#7C3AED"/></linearGradient></defs>
-  <rect width="32" height="32" rx="${radius}" fill="url(#g)"/>
-  <g transform="translate(${16 - 16 * (1 - pad)} ${16 - 16 * (1 - pad)}) scale(${1 - pad})">
-    <path d="M11 7v10.2c0 .8.9 1.3 1.6.9l7.6-5.1c.6-.4.6-1.3 0-1.7l-7.6-5.1C11.9 5.7 11 6.2 11 7Z" fill="#fff"/>
-    <path d="M10 24h12" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/>
-  </g>
-</svg>`;
+const svg = fs.readFileSync('public/logo.svg', 'utf8');
+const cairo = (f) => fs.readFileSync(`public/fonts/${f}`).toString('base64');
+const fontCss = `
+@font-face{font-family:'CairoE';src:url(data:font/woff2;base64,${cairo('cairo-arabic-wght-normal.woff2')}) format('woff2-variations');font-weight:200 1000;unicode-range:U+0600-06FF,U+0750-077F,U+FB50-FDFF,U+FE70-FEFC,U+200C-200E}
+@font-face{font-family:'CairoE';src:url(data:font/woff2;base64,${cairo('cairo-latin-wght-normal.woff2')}) format('woff2-variations');font-weight:200 1000;unicode-range:U+0000-00FF,U+2000-206F}`;
 
-const browser = await chromium.launch(
-  fs.existsSync('/opt/pw-browsers/chromium') ? { executablePath: '/opt/pw-browsers/chromium' } : {},
-);
+const sized = (n) => svg.replace(/width="\d+" height="\d+"/, `width="${n}" height="${n}"`);
+const browser = await chromium.launch(fs.existsSync('/opt/pw-browsers/chromium') ? { executablePath: '/opt/pw-browsers/chromium' } : {});
 const page = await browser.newPage();
 
 async function png(html, w, h, out, transparent = false) {
   await page.setViewportSize({ width: w, height: h });
-  await page.setContent(
-    `<html><body style="margin:0;background:${transparent ? 'transparent' : '#fff'}">${html}</body></html>`,
-  );
+  await page.setContent(`<html><head><style>${fontCss}</style></head><body style="margin:0;background:${transparent ? 'transparent' : '#fff'}">${html}</body></html>`);
+  await page.evaluate(() => document.fonts.ready);
   await page.screenshot({ path: out, omitBackground: transparent });
 }
 
-await png(mark(192), 192, 192, 'public/icons/icon-192.png', true);
-await png(mark(512), 512, 512, 'public/icons/icon-512.png', true);
-// Maskable: full-bleed square background with the glyph inside the safe zone.
-await png(mark(512, 0.22, 0), 512, 512, 'public/icons/icon-maskable-512.png');
-await png(mark(180, 0.0, 0), 180, 180, 'src/app/apple-icon.png');
+await png(sized(192), 192, 192, 'public/icons/icon-192.png', true);
+await png(sized(512), 512, 512, 'public/icons/icon-512.png', true);
+// Maskable: full-bleed background with the mark inside the safe zone.
+await png(`<div style="width:512px;height:512px;background:linear-gradient(135deg,#2563EB,#7C3AED);display:flex;align-items:center;justify-content:center"><div style="width:300px;height:300px">${sized(300)}</div></div>`, 512, 512, 'public/icons/icon-maskable-512.png');
+await png(sized(180), 180, 180, 'src/app/apple-icon.png', true);
 
-const brand = process.env.NEXT_PUBLIC_BRAND_NAME || 'ReelSave';
 await png(
-  `<div style="width:1200px;height:630px;display:flex;flex-direction:column;justify-content:center;padding:0 90px;box-sizing:border-box;font-family:Inter,system-ui,sans-serif;background:linear-gradient(135deg,#0b1020 0%,#1e1b4b 60%,#312e81 100%);color:#fff">
-    <div style="display:flex;align-items:center;gap:28px">${mark(120)}<div style="font-size:84px;font-weight:800;letter-spacing:-2px">${brand}</div></div>
-    <div style="margin-top:40px;font-size:46px;font-weight:600;line-height:1.25;max-width:900px">Facebook Reels &amp; video downloader</div>
-    <div style="margin-top:18px;font-size:30px;color:#c7d2fe">EN · FR · ES · AR</div>
+  `<div dir="rtl" style="width:1200px;height:630px;display:flex;align-items:center;justify-content:center;gap:56px;font-family:CairoE,sans-serif;background:linear-gradient(135deg,#0b1020 0%,#1e1b4b 60%,#312e81 100%);color:#fff;box-sizing:border-box;padding:0 90px">
+    ${sized(240)}
+    <div style="text-align:right">
+      <div style="font-size:62px;font-weight:800;line-height:1.3;white-space:nowrap">حاسبة مكافأة نهاية الخدمة</div>
+      <div style="margin-top:20px;font-size:34px;font-weight:600;color:#c7d2fe;white-space:nowrap">وفق نظام العمل السعودي — القطاع الخاص</div>
+    </div>
   </div>`,
   1200,
   630,
