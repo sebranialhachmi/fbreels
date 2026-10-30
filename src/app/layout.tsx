@@ -25,19 +25,33 @@ export const metadata: Metadata = {
   formatDetection: { telephone: false },
 };
 
-
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ar" dir="rtl" suppressHydrationWarning>
       <head>
         <ThemeScript />
         {/* Preloaded together with font-display: optional so the web font cannot cause layout shift. */}
-        <link rel="preload" href="/fonts/cairo-arabic-wght-normal.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
-        <link rel="preload" href="/fonts/cairo-latin-wght-normal.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+        <link
+          rel="preload"
+          href="/fonts/cairo-arabic-wght-normal.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          href="/fonts/cairo-latin-wght-normal.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
       </head>
       <body className="flex min-h-dvh flex-col">
         <ConsentProvider>
-          <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:start-3 focus:top-3 focus:z-[60] focus:rounded-control focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-fg">
+          <a
+            href="#main"
+            className="sr-only focus:not-sr-only focus:fixed focus:start-3 focus:top-3 focus:z-[60] focus:rounded-control focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-fg"
+          >
             الانتقال إلى المحتوى الرئيسي
           </a>
           <Header />

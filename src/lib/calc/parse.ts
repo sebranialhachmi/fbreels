@@ -24,8 +24,29 @@ export function formatSar(n: number): string {
 
 export function formatPeriod(p: { years: number; months: number; days: number }): string {
   const parts: string[] = [];
-  if (p.years) parts.push(p.years === 1 ? 'سنة' : p.years === 2 ? 'سنتان' : `${p.years} ${p.years <= 10 ? 'سنوات' : 'سنة'}`);
-  if (p.months) parts.push(p.months === 1 ? 'شهر' : p.months === 2 ? 'شهران' : `${p.months} ${p.months <= 10 ? 'أشهر' : 'شهراً'}`);
-  if (p.days) parts.push(p.days === 1 ? 'يوم' : p.days === 2 ? 'يومان' : `${p.days} ${p.days <= 10 ? 'أيام' : 'يوماً'}`);
+  if (p.years)
+    parts.push(
+      p.years === 1
+        ? 'سنة'
+        : p.years === 2
+          ? 'سنتان'
+          : `${p.years} ${p.years <= 10 ? 'سنوات' : 'سنة'}`,
+    );
+  if (p.months)
+    parts.push(
+      p.months === 1
+        ? 'شهر'
+        : p.months === 2
+          ? 'شهران'
+          : `${p.months} ${p.months <= 10 ? 'أشهر' : 'شهراً'}`,
+    );
+  if (p.days)
+    parts.push(
+      p.days === 1
+        ? 'يوم'
+        : p.days === 2
+          ? 'يومان'
+          : `${p.days} ${p.days <= 10 ? 'أيام' : 'يوماً'}`,
+    );
   return parts.length ? parts.join(' و') : 'أقل من يوم';
 }

@@ -23,7 +23,14 @@ export function AdSlot({ placement, className }: { placement: AdPlacement; class
   if (!cfg.enabled) return null;
   if (!adsenseEnabled || !cfg.slotId) {
     return isDev ? (
-      <div data-testid="ad-dev-placeholder" style={{ minHeight: cfg.minHeight }} className={cn('flex items-center justify-center rounded-card border border-dashed border-border text-xs text-muted', className)}>
+      <div
+        data-testid="ad-dev-placeholder"
+        style={{ minHeight: cfg.minHeight }}
+        className={cn(
+          'flex items-center justify-center rounded-card border border-dashed border-border text-xs text-muted',
+          className,
+        )}
+      >
         DEV ONLY — ad placeholder: {placement}
       </div>
     ) : null;
@@ -31,7 +38,15 @@ export function AdSlot({ placement, className }: { placement: AdPlacement; class
   return <LiveAd slotId={cfg.slotId} minHeight={cfg.minHeight} className={className} />;
 }
 
-function LiveAd({ slotId, minHeight, className }: { slotId: string; minHeight: number; className?: string }) {
+function LiveAd({
+  slotId,
+  minHeight,
+  className,
+}: {
+  slotId: string;
+  minHeight: number;
+  className?: string;
+}) {
   const { consent } = useConsent();
   const allowed = consentMode === 'google-cmp' || consent.advertising;
   const box = useRef<HTMLDivElement>(null);
@@ -65,9 +80,23 @@ function LiveAd({ slotId, minHeight, className }: { slotId: string; minHeight: n
 
   if (!allowed) return null;
   return (
-    <aside ref={box} aria-label="إعلان" style={{ minHeight }} className={cn('mx-auto w-full max-w-3xl', className)}>
+    <aside
+      ref={box}
+      aria-label="إعلان"
+      style={{ minHeight }}
+      className={cn('mx-auto w-full max-w-3xl', className)}
+    >
       <p className="mb-1 text-center text-[11px] tracking-wider text-muted">إعلان</p>
-      {visible && <ins className="adsbygoogle block" style={{ display: 'block', minHeight: minHeight - 20 }} data-ad-client={adsensePublisherId} data-ad-slot={slotId} data-ad-format="auto" data-full-width-responsive="true" />}
+      {visible && (
+        <ins
+          className="adsbygoogle block"
+          style={{ display: 'block', minHeight: minHeight - 20 }}
+          data-ad-client={adsensePublisherId}
+          data-ad-slot={slotId}
+          data-ad-format="auto"
+          data-full-width-responsive="true"
+        />
+      )}
     </aside>
   );
 }

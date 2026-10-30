@@ -2,7 +2,9 @@ import { defineConfig, devices } from '@playwright/test';
 import fs from 'node:fs';
 
 const BASE = 'http://localhost:3100';
-const executablePath = fs.existsSync('/opt/pw-browsers/chromium') ? '/opt/pw-browsers/chromium' : undefined;
+const executablePath = fs.existsSync('/opt/pw-browsers/chromium')
+  ? '/opt/pw-browsers/chromium'
+  : undefined;
 const launchOptions = { executablePath, args: ['--no-sandbox'] };
 
 export default defineConfig({

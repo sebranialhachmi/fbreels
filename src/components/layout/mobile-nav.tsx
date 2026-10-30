@@ -40,11 +40,19 @@ export function MobileNav({ links }: { links: NavLink[] }) {
         {open ? <X aria-hidden className="size-6" /> : <Menu aria-hidden className="size-6" />}
       </Button>
       {open && (
-        <nav id="mobile-nav-panel" aria-label="التنقل على الجوال" className="absolute inset-x-0 top-full border-b border-border bg-card px-4 pb-4 pt-2 shadow-pop">
+        <nav
+          id="mobile-nav-panel"
+          aria-label="التنقل على الجوال"
+          className="absolute inset-x-0 top-full border-b border-border bg-card px-4 pb-4 pt-2 shadow-pop"
+        >
           <ul className="space-y-1">
             {links.map((l) => (
               <li key={l.href}>
-                <Link href={l.href} className="block rounded-lg px-3 py-3 text-base font-medium hover:bg-subtle" aria-current={pathname === l.href ? 'page' : undefined}>
+                <Link
+                  href={l.href}
+                  className="block rounded-lg px-3 py-3 text-base font-medium hover:bg-subtle"
+                  aria-current={pathname === l.href ? 'page' : undefined}
+                >
                   {l.label}
                 </Link>
               </li>

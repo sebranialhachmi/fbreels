@@ -8,7 +8,8 @@ import { siteUrl } from '@/config/site';
 
 const DIR = path.join(process.cwd(), 'content');
 
-export type PageKind = 'calculator' | 'sector' | 'article' | 'legal' | 'static' | 'articles-index' | 'sitemap';
+export type PageKind =
+  'calculator' | 'sector' | 'article' | 'legal' | 'static' | 'articles-index' | 'sitemap';
 export type CalcPreset = 'general' | 'resignation' | 'termination';
 
 export type FaqEntry = { q: string; a: string };
@@ -124,5 +125,10 @@ export function pagesOfKind(...kinds: PageKind[]): PageMeta[] {
 
 export function wordCount(slug: string): number {
   const p = getPage(slug);
-  return p ? (p.before + p.after).replace(/<[^>]+>/g, ' ').split(/\s+/).filter(Boolean).length : 0;
+  return p
+    ? (p.before + p.after)
+        .replace(/<[^>]+>/g, ' ')
+        .split(/\s+/)
+        .filter(Boolean).length
+    : 0;
 }

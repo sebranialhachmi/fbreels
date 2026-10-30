@@ -8,7 +8,8 @@ import { track } from '@/lib/analytics/track';
 import { INQUIRY_TYPES, contactSchema, type InquiryType } from '@/lib/contact';
 
 type Field = 'name' | 'email' | 'message';
-type Status = { kind: 'idle' } | { kind: 'sending' } | { kind: 'success' } | { kind: 'error'; message: string };
+type Status =
+  { kind: 'idle' } | { kind: 'sending' } | { kind: 'success' } | { kind: 'error'; message: string };
 
 const TYPE_LABELS: Record<InquiryType, string> = {
   general: 'سؤال عام',
@@ -19,7 +20,8 @@ const TYPE_LABELS: Record<InquiryType, string> = {
   bug: 'الإبلاغ عن خطأ في الحساب أو الموقع',
 };
 
-const fieldClass = 'mt-1.5 w-full rounded-control border border-border bg-bg px-3 py-2.5 text-base aria-[invalid=true]:border-danger';
+const fieldClass =
+  'mt-1.5 w-full rounded-control border border-border bg-bg px-3 py-2.5 text-base aria-[invalid=true]:border-danger';
 
 export function ContactForm() {
   const uid = useId();
@@ -60,8 +62,15 @@ export function ContactForm() {
     setErrors({});
     setStatus({ kind: 'sending' });
     try {
-      const res = await fetch('/api/contact', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(payload) });
-      const body = (await res.json().catch(() => null)) as { success?: boolean; error?: { code?: string } } | null;
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const body = (await res.json().catch(() => null)) as {
+        success?: boolean;
+        error?: { code?: string };
+      } | null;
       if (res.ok && body?.success) {
         form.reset();
         startedAt.current = Date.now();
@@ -72,7 +81,12 @@ export function ContactForm() {
       const code = body?.error?.code;
       setStatus({
         kind: 'error',
-        message: code === 'RATE_LIMITED' ? 'أرسلت عدة رسائل مؤخراً. يرجى المحاولة لاحقاً.' : code === 'SERVER_CONFIGURATION_ERROR' || code === 'PROVIDER_UNAVAILABLE' ? 'نموذج الاتصال غير متاح حالياً. يرجى المحاولة لاحقاً.' : 'تعذّر إرسال رسالتك. يرجى المحاولة مرة أخرى.',
+        message:
+          code === 'RATE_LIMITED'
+            ? 'أرسلت عدة رسائل مؤخراً. يرجى المحاولة لاحقاً.'
+            : code === 'SERVER_CONFIGURATION_ERROR' || code === 'PROVIDER_UNAVAILABLE'
+              ? 'نموذج الاتصال غير متاح حالياً. يرجى المحاولة لاحقاً.'
+              : 'تعذّر إرسال رسالتك. يرجى المحاولة مرة أخرى.',
       });
     } catch {
       setStatus({ kind: 'error', message: 'تعذّر إرسال رسالتك. يرجى المحاولة مرة أخرى.' });
@@ -83,7 +97,12 @@ export function ContactForm() {
   const err = (f: Field) => (errors[f] ? `${uid}-${f}-err` : undefined);
 
   return (
-    <form onSubmit={onSubmit} noValidate className="space-y-5" aria-busy={status.kind === 'sending'}>
+    <form
+      onSubmit={onSubmit}
+      noValidate
+      className="space-y-5"
+      aria-busy={status.kind === 'sending'}
+    >
       <div ref={summary} tabIndex={-1} className="outline-none">
         {status.kind === 'success' && <Alert tone="success">شكراً لك. تم إرسال رسالتك.</Alert>}
         {status.kind === 'error' && <Alert tone="error">{status.message}</Alert>}
@@ -93,7 +112,15 @@ export function ContactForm() {
         <label htmlFor={`${uid}-name`} className="block text-sm font-semibold">
           الاسم
         </label>
-        <input id={`${uid}-name`} name="name" autoComplete="name" maxLength={100} aria-invalid={errors.name || undefined} aria-describedby={err('name')} className={fieldClass} />
+        <input
+          id={`${uid}-name`}
+          name="name"
+          autoComplete="name"
+          maxLength={100}
+          aria-invalid={errors.name || undefined}
+          aria-describedby={err('name')}
+          className={fieldClass}
+        />
         {errors.name && (
           <p id={err('name')} className="mt-1 text-sm text-danger-text">
             أدخل اسمك (حرفان على الأقل).
@@ -105,7 +132,17 @@ export function ContactForm() {
         <label htmlFor={`${uid}-email`} className="block text-sm font-semibold">
           البريد الإلكتروني
         </label>
-        <input id={`${uid}-email`} name="email" type="email" dir="ltr" autoComplete="email" maxLength={254} aria-invalid={errors.email || undefined} aria-describedby={err('email')} className={`${fieldClass} text-start`} />
+        <input
+          id={`${uid}-email`}
+          name="email"
+          type="email"
+          dir="ltr"
+          autoComplete="email"
+          maxLength={254}
+          aria-invalid={errors.email || undefined}
+          aria-describedby={err('email')}
+          className={`${fieldClass} text-start`}
+        />
         {errors.email && (
           <p id={err('email')} className="mt-1 text-sm text-danger-text">
             أدخل بريداً إلكترونياً صالحاً.
@@ -130,7 +167,15 @@ export function ContactForm() {
         <label htmlFor={`${uid}-message`} className="block text-sm font-semibold">
           الرسالة
         </label>
-        <textarea id={`${uid}-message`} name="message" rows={6} maxLength={4000} aria-invalid={errors.message || undefined} aria-describedby={err('message')} className={fieldClass} />
+        <textarea
+          id={`${uid}-message`}
+          name="message"
+          rows={6}
+          maxLength={4000}
+          aria-invalid={errors.message || undefined}
+          aria-describedby={err('message')}
+          className={fieldClass}
+        />
         {errors.message && (
           <p id={err('message')} className="mt-1 text-sm text-danger-text">
             اكتب رسالة لا تقل عن 10 أحرف.
@@ -146,7 +191,9 @@ export function ContactForm() {
         </label>
       </div>
 
-      <p className="text-xs text-muted">لا ترسل كلمات مرور أو بيانات حساسة. نقرأ كل الرسائل لكننا لا نعد بموعد محدد للرد.</p>
+      <p className="text-xs text-muted">
+        لا ترسل كلمات مرور أو بيانات حساسة. نقرأ كل الرسائل لكننا لا نعد بموعد محدد للرد.
+      </p>
       <Button type="submit" size="lg" disabled={status.kind === 'sending'}>
         {status.kind === 'sending' && <Spinner />}
         {status.kind === 'sending' ? 'جارٍ الإرسال…' : 'إرسال الرسالة'}

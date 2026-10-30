@@ -12,7 +12,9 @@ export function Footer() {
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr_1fr_1fr]">
           <div className="space-y-3">
             <Logo />
-            <p className="max-w-xs text-sm text-muted">{brand.tagline}. نتائج تقديرية وليست استشارة قانونية.</p>
+            <p className="max-w-xs text-sm text-muted">
+              {brand.tagline}. نتائج تقديرية وليست استشارة قانونية.
+            </p>
           </div>
           {groups.map((g) => (
             <div key={g.title}>
@@ -35,7 +37,10 @@ export function Footer() {
           ))}
         </div>
         <div className="mt-10 space-y-2 border-t border-border pt-6 text-xs leading-relaxed text-muted">
-          <p>هذا موقع مستقل وغير تابع لأي جهة حكومية، ولا يمثل وزارة الموارد البشرية والتنمية الاجتماعية أو منصة قوى أو المؤسسة العامة للتقاعد أو التأمينات الاجتماعية.</p>
+          <p>
+            هذا موقع مستقل وغير تابع لأي جهة حكومية، ولا يمثل وزارة الموارد البشرية والتنمية
+            الاجتماعية أو منصة قوى أو المؤسسة العامة للتقاعد أو التأمينات الاجتماعية.
+          </p>
           <p>
             © {new Date().getFullYear()} {brand.name}. جميع الحقوق محفوظة.
           </p>

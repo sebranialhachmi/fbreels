@@ -6,7 +6,15 @@ import { Alert } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { track } from '@/lib/analytics/track';
-import { EosInputError, REASON_LABELS, calculateEos, periodBetween, type EosResult, type Reason, type ServicePeriod } from '@/lib/calc/eos';
+import {
+  EosInputError,
+  REASON_LABELS,
+  calculateEos,
+  periodBetween,
+  type EosResult,
+  type Reason,
+  type ServicePeriod,
+} from '@/lib/calc/eos';
 import { formatPeriod, formatSar, parseIntStrict, parseNumber } from '@/lib/calc/parse';
 
 type Mode = 'dates' | 'manual';
@@ -21,11 +29,19 @@ type Computed = {
   allowances: number;
 };
 
-const FRACTION_TEXT = (f: number) => (f === 0 ? 'لا شيء' : f === 1 ? 'كاملة' : f > 0.6 ? 'ثلثان' : 'ثلث');
+const FRACTION_TEXT = (f: number) =>
+  f === 0 ? 'لا شيء' : f === 1 ? 'كاملة' : f > 0.6 ? 'ثلثان' : 'ثلث';
 
-const inputClass = 'mt-1.5 h-12 w-full rounded-control border border-border bg-bg px-3 text-base aria-[invalid=true]:border-danger';
+const inputClass =
+  'mt-1.5 h-12 w-full rounded-control border border-border bg-bg px-3 text-base aria-[invalid=true]:border-danger';
 
-export function EosCalculator({ reasons, defaultReason }: { reasons: readonly Reason[]; defaultReason: Reason }) {
+export function EosCalculator({
+  reasons,
+  defaultReason,
+}: {
+  reasons: readonly Reason[];
+  defaultReason: Reason;
+}) {
   const uid = useId();
   const [reason, setReason] = useState<Reason>(defaultReason);
   const [mode, setMode] = useState<Mode>('dates');
@@ -46,7 +62,8 @@ export function EosCalculator({ reasons, defaultReason }: { reasons: readonly Re
     const problems: string[] = [];
     const basicN = parseNumber(basic);
     const allowN = allowances.trim() === '' ? 0 : parseNumber(allowances);
-    if (!Number.isFinite(basicN) || basicN <= 0) problems.push('أدخل الأجر الأساسي كرقم أكبر من صفر.');
+    if (!Number.isFinite(basicN) || basicN <= 0)
+      problems.push('أدخل الأجر الأساسي كرقم أكبر من صفر.');
     if (!Number.isFinite(allowN) || allowN < 0) problems.push('قيمة البدلات غير صحيحة.');
 
     let period: ServicePeriod | null = null;
@@ -58,7 +75,8 @@ export function EosCalculator({ reasons, defaultReason }: { reasons: readonly Re
         const y = parseIntStrict(years);
         const m = parseIntStrict(months);
         const d = parseIntStrict(days);
-        if ([y, m, d].some((n) => Number.isNaN(n))) throw new EosInputError('أدخل السنوات والأشهر والأيام كأرقام صحيحة.');
+        if ([y, m, d].some((n) => Number.isNaN(n)))
+          throw new EosInputError('أدخل السنوات والأشهر والأيام كأرقام صحيحة.');
         period = { years: y, months: m, days: d };
       }
     } catch (err) {
@@ -69,7 +87,15 @@ export function EosCalculator({ reasons, defaultReason }: { reasons: readonly Re
       try {
         const withAllowances = calculateEos({ wage: basicN + allowN, service: period, reason });
         const basicOnly = calculateEos({ wage: basicN, service: period, reason });
-        setResult({ period, reason, withAllowances, basicOnly, includeAllowances, basic: basicN, allowances: allowN });
+        setResult({
+          period,
+          reason,
+          withAllowances,
+          basicOnly,
+          includeAllowances,
+          basic: basicN,
+          allowances: allowN,
+        });
         setErrors([]);
         track('calculation_done', { reason });
         requestAnimationFrame(() => resultRef.current?.focus());
@@ -94,17 +120,35 @@ export function EosCalculator({ reasons, defaultReason }: { reasons: readonly Re
     setErrors([]);
   }
 
-  const shown = result ? (result.includeAllowances ? result.withAllowances : result.basicOnly) : null;
-  const other = result ? (result.includeAllowances ? result.basicOnly : result.withAllowances) : null;
+  const shown = result
+    ? result.includeAllowances
+      ? result.withAllowances
+      : result.basicOnly
+    : null;
+  const other = result
+    ? result.includeAllowances
+      ? result.basicOnly
+      : result.withAllowances
+    : null;
 
   return (
     <Card className="p-4 sm:p-6">
-      <form onSubmit={submit} noValidate aria-label="حاسبة مكافأة نهاية الخدمة" className="space-y-5">
+      <form
+        onSubmit={submit}
+        noValidate
+        aria-label="حاسبة مكافأة نهاية الخدمة"
+        className="space-y-5"
+      >
         <div>
           <label htmlFor={`${uid}-reason`} className="block text-sm font-semibold">
             سبب انتهاء علاقة العمل
           </label>
-          <select id={`${uid}-reason`} value={reason} onChange={(e) => setReason(e.target.value as Reason)} className={inputClass}>
+          <select
+            id={`${uid}-reason`}
+            value={reason}
+            onChange={(e) => setReason(e.target.value as Reason)}
+            className={inputClass}
+          >
             {reasons.map((r) => (
               <option key={r} value={r}>
                 {REASON_LABELS[r]}
@@ -117,11 +161,23 @@ export function EosCalculator({ reasons, defaultReason }: { reasons: readonly Re
           <legend className="text-sm font-semibold">مدة الخدمة</legend>
           <div className="mt-2 flex flex-wrap gap-4 text-sm">
             <label className="flex cursor-pointer items-center gap-2">
-              <input type="radio" name={`${uid}-mode`} checked={mode === 'dates'} onChange={() => setMode('dates')} className="size-4 accent-[var(--primary)]" />
+              <input
+                type="radio"
+                name={`${uid}-mode`}
+                checked={mode === 'dates'}
+                onChange={() => setMode('dates')}
+                className="size-4 accent-[var(--primary)]"
+              />
               من تاريخ إلى تاريخ
             </label>
             <label className="flex cursor-pointer items-center gap-2">
-              <input type="radio" name={`${uid}-mode`} checked={mode === 'manual'} onChange={() => setMode('manual')} className="size-4 accent-[var(--primary)]" />
+              <input
+                type="radio"
+                name={`${uid}-mode`}
+                checked={mode === 'manual'}
+                onChange={() => setMode('manual')}
+                className="size-4 accent-[var(--primary)]"
+              />
               إدخال المدة يدوياً
             </label>
           </div>
@@ -131,13 +187,27 @@ export function EosCalculator({ reasons, defaultReason }: { reasons: readonly Re
                 <label htmlFor={`${uid}-start`} className="block text-sm">
                   تاريخ بداية الخدمة
                 </label>
-                <input id={`${uid}-start`} type="date" dir="ltr" value={start} onChange={(e) => setStart(e.target.value)} className={`${inputClass} text-start`} />
+                <input
+                  id={`${uid}-start`}
+                  type="date"
+                  dir="ltr"
+                  value={start}
+                  onChange={(e) => setStart(e.target.value)}
+                  className={`${inputClass} text-start`}
+                />
               </div>
               <div>
                 <label htmlFor={`${uid}-end`} className="block text-sm">
                   تاريخ نهاية الخدمة
                 </label>
-                <input id={`${uid}-end`} type="date" dir="ltr" value={end} onChange={(e) => setEnd(e.target.value)} className={`${inputClass} text-start`} />
+                <input
+                  id={`${uid}-end`}
+                  type="date"
+                  dir="ltr"
+                  value={end}
+                  onChange={(e) => setEnd(e.target.value)}
+                  className={`${inputClass} text-start`}
+                />
               </div>
             </div>
           ) : (
@@ -153,7 +223,16 @@ export function EosCalculator({ reasons, defaultReason }: { reasons: readonly Re
                   <label htmlFor={`${uid}-${label}`} className="block text-sm">
                     {label}
                   </label>
-                  <input id={`${uid}-${label}`} inputMode="numeric" dir="ltr" autoComplete="off" value={value} onChange={(e) => set(e.target.value)} placeholder="0" className={`${inputClass} text-start`} />
+                  <input
+                    id={`${uid}-${label}`}
+                    inputMode="numeric"
+                    dir="ltr"
+                    autoComplete="off"
+                    value={value}
+                    onChange={(e) => set(e.target.value)}
+                    placeholder="0"
+                    className={`${inputClass} text-start`}
+                  />
                 </div>
               ))}
             </div>
@@ -165,18 +244,44 @@ export function EosCalculator({ reasons, defaultReason }: { reasons: readonly Re
             <label htmlFor={`${uid}-basic`} className="block text-sm font-semibold">
               الأجر الأساسي الشهري (ريال)
             </label>
-            <input id={`${uid}-basic`} inputMode="decimal" dir="ltr" autoComplete="off" value={basic} onChange={(e) => setBasic(e.target.value)} placeholder="مثال: 6000" className={`${inputClass} text-start`} />
+            <input
+              id={`${uid}-basic`}
+              inputMode="decimal"
+              dir="ltr"
+              autoComplete="off"
+              value={basic}
+              onChange={(e) => setBasic(e.target.value)}
+              placeholder="مثال: 6000"
+              className={`${inputClass} text-start`}
+            />
           </div>
           <div>
             <label htmlFor={`${uid}-allow`} className="block text-sm font-semibold">
               البدلات الثابتة الشهرية (ريال) — اختياري
             </label>
-            <input id={`${uid}-allow`} inputMode="decimal" dir="ltr" autoComplete="off" value={allowances} onChange={(e) => setAllowances(e.target.value)} placeholder="سكن، مواصلات…" className={`${inputClass} text-start`} />
+            <input
+              id={`${uid}-allow`}
+              inputMode="decimal"
+              dir="ltr"
+              autoComplete="off"
+              value={allowances}
+              onChange={(e) => setAllowances(e.target.value)}
+              placeholder="سكن، مواصلات…"
+              className={`${inputClass} text-start`}
+            />
           </div>
         </div>
         <label className="flex cursor-pointer items-start gap-2 text-sm">
-          <input type="checkbox" checked={includeAllowances} onChange={(e) => setIncludeAllowances(e.target.checked)} className="mt-1 size-4 accent-[var(--primary)]" />
-          <span>احتساب البدلات الثابتة ضمن الأجر (الأصل أن يُحسب على آخر أجر، لكن راجع عقدك لأن بعض المصادر تقتصر على الأساسي).</span>
+          <input
+            type="checkbox"
+            checked={includeAllowances}
+            onChange={(e) => setIncludeAllowances(e.target.checked)}
+            className="mt-1 size-4 accent-[var(--primary)]"
+          />
+          <span>
+            احتساب البدلات الثابتة ضمن الأجر (الأصل أن يُحسب على آخر أجر، لكن راجع عقدك لأن بعض
+            المصادر تقتصر على الأساسي).
+          </span>
         </label>
 
         {errors.length > 0 && (
@@ -203,10 +308,17 @@ export function EosCalculator({ reasons, defaultReason }: { reasons: readonly Re
 
       <div ref={resultRef} tabIndex={-1} aria-live="polite" className="outline-none">
         {result && shown && other && (
-          <section data-testid="eos-result" aria-label="نتيجة الحساب" className="mt-6 space-y-4 border-t border-border pt-6">
+          <section
+            data-testid="eos-result"
+            aria-label="نتيجة الحساب"
+            className="mt-6 space-y-4 border-t border-border pt-6"
+          >
             <div className="rounded-card bg-subtle p-5 text-center">
               <p className="text-sm text-muted">مكافأة نهاية الخدمة المستحقة (تقديرية)</p>
-              <p className="mt-1 text-3xl font-extrabold tracking-tight text-primary-text" data-testid="eos-total">
+              <p
+                className="mt-1 text-3xl font-extrabold tracking-tight text-primary-text"
+                data-testid="eos-total"
+              >
                 {formatSar(shown.total)}
               </p>
               <p className="mt-2 text-sm">{shown.note}</p>
@@ -214,19 +326,34 @@ export function EosCalculator({ reasons, defaultReason }: { reasons: readonly Re
             <dl className="grid gap-x-6 gap-y-3 text-sm sm:grid-cols-2">
               <Row label="سبب الإنهاء" value={REASON_LABELS[result.reason]} />
               <Row label="مدة الخدمة" value={formatPeriod(result.period)} />
-              <Row label="الأجر المعتمد للحساب" value={formatSar(result.includeAllowances ? result.basic + result.allowances : result.basic)} />
-              <Row label="مكافأة أول 5 سنوات (نصف شهر عن كل سنة)" value={formatSar(shown.firstFiveAmount)} />
-              <Row label="مكافأة ما زاد على 5 سنوات (شهر عن كل سنة)" value={formatSar(shown.afterFiveAmount)} />
+              <Row
+                label="الأجر المعتمد للحساب"
+                value={formatSar(
+                  result.includeAllowances ? result.basic + result.allowances : result.basic,
+                )}
+              />
+              <Row
+                label="مكافأة أول 5 سنوات (نصف شهر عن كل سنة)"
+                value={formatSar(shown.firstFiveAmount)}
+              />
+              <Row
+                label="مكافأة ما زاد على 5 سنوات (شهر عن كل سنة)"
+                value={formatSar(shown.afterFiveAmount)}
+              />
               <Row label="المكافأة الكاملة قبل النسبة" value={formatSar(shown.fullAmount)} />
               <Row label="النسبة المستحقة" value={FRACTION_TEXT(shown.fraction)} />
             </dl>
             {result.allowances > 0 && (
               <p className="text-sm text-muted">
-                {result.includeAllowances ? 'لو اقتصر الحساب على الأجر الأساسي فقط' : 'لو شُملت البدلات الثابتة في الحساب'}: <strong className="text-fg">{formatSar(other.total)}</strong>
+                {result.includeAllowances
+                  ? 'لو اقتصر الحساب على الأجر الأساسي فقط'
+                  : 'لو شُملت البدلات الثابتة في الحساب'}
+                : <strong className="text-fg">{formatSar(other.total)}</strong>
               </p>
             )}
             <Alert tone="warning">
-              هذه النتيجة تقديرية وليست استشارة قانونية. قد يختلف المبلغ الفعلي بحسب عقدك وبنود الأجر وسبب الإنهاء. للتحقق الرسمي استخدم حاسبة وزارة الموارد البشرية أو منصة قوى.
+              هذه النتيجة تقديرية وليست استشارة قانونية. قد يختلف المبلغ الفعلي بحسب عقدك وبنود
+              الأجر وسبب الإنهاء. للتحقق الرسمي استخدم حاسبة وزارة الموارد البشرية أو منصة قوى.
             </Alert>
           </section>
         )}

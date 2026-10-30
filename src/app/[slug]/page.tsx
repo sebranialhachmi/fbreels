@@ -22,7 +22,9 @@ function decode(slug: string) {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const page = getPage(decode((await params).slug));
-  return page ? buildMetadata(page, page.kind === 'article' ? 'article' : 'website', page.published) : {};
+  return page
+    ? buildMetadata(page, page.kind === 'article' ? 'article' : 'website', page.published)
+    : {};
 }
 
 export default async function ContentPage({ params }: Props) {

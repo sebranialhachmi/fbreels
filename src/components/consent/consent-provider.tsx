@@ -1,7 +1,19 @@
 'use client';
 
-import { createContext, useCallback, useContext, useMemo, useState, useSyncExternalStore } from 'react';
-import { CONSENT_EVENT, CONSENT_STORAGE_KEY, NO_CONSENT, type ConsentState } from '@/lib/consent/config';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+  useSyncExternalStore,
+} from 'react';
+import {
+  CONSENT_EVENT,
+  CONSENT_STORAGE_KEY,
+  NO_CONSENT,
+  type ConsentState,
+} from '@/lib/consent/config';
 
 type Ctx = {
   consent: ConsentState;
@@ -27,7 +39,9 @@ function readSnapshot(): ConsentState {
   cachedRaw = raw;
   try {
     const p = raw ? (JSON.parse(raw) as Partial<ConsentState>) : null;
-    cachedState = p ? { analytics: p.analytics === true, advertising: p.advertising === true, decided: true } : NO_CONSENT;
+    cachedState = p
+      ? { analytics: p.analytics === true, advertising: p.advertising === true, decided: true }
+      : NO_CONSENT;
   } catch {
     cachedState = NO_CONSENT;
   }
@@ -58,7 +72,13 @@ export function ConsentProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const value = useMemo<Ctx>(
-    () => ({ consent, save, preferencesOpen, openPreferences: () => setOpen(true), closePreferences: () => setOpen(false) }),
+    () => ({
+      consent,
+      save,
+      preferencesOpen,
+      openPreferences: () => setOpen(true),
+      closePreferences: () => setOpen(false),
+    }),
     [consent, save, preferencesOpen],
   );
   return <ConsentContext.Provider value={value}>{children}</ConsentContext.Provider>;

@@ -74,23 +74,43 @@ const round2 = (n: number) => Math.round((n + Number.EPSILON) * 100) / 100;
 
 function fractionFor(reason: Reason, serviceYears: number): { fraction: number; note: string } {
   if (reason === 'dismissal_art80') {
-    return { fraction: 0, note: 'لا يستحق العامل مكافأة نهاية الخدمة عند فصله لأحد أسباب المادة 80.' };
+    return {
+      fraction: 0,
+      note: 'لا يستحق العامل مكافأة نهاية الخدمة عند فصله لأحد أسباب المادة 80.',
+    };
   }
   if (FULL_REWARD.has(reason)) {
     return { fraction: 1, note: 'يستحق العامل المكافأة كاملة في هذه الحالة.' };
   }
   // Resignation: Art. 85.
-  if (serviceYears < 2) return { fraction: 0, note: 'لا يستحق العامل مكافأة عند الاستقالة إذا قلّت مدة خدمته عن سنتين.' };
-  if (serviceYears < 5) return { fraction: 1 / 3, note: 'عند الاستقالة بعد سنتين وقبل خمس سنوات يستحق العامل ثلث المكافأة.' };
-  if (serviceYears < 10) return { fraction: 2 / 3, note: 'عند الاستقالة بعد خمس سنوات وقبل عشر سنوات يستحق العامل ثلثي المكافأة.' };
+  if (serviceYears < 2)
+    return {
+      fraction: 0,
+      note: 'لا يستحق العامل مكافأة عند الاستقالة إذا قلّت مدة خدمته عن سنتين.',
+    };
+  if (serviceYears < 5)
+    return {
+      fraction: 1 / 3,
+      note: 'عند الاستقالة بعد سنتين وقبل خمس سنوات يستحق العامل ثلث المكافأة.',
+    };
+  if (serviceYears < 10)
+    return {
+      fraction: 2 / 3,
+      note: 'عند الاستقالة بعد خمس سنوات وقبل عشر سنوات يستحق العامل ثلثي المكافأة.',
+    };
   return { fraction: 1, note: 'عند الاستقالة بعد عشر سنوات فأكثر يستحق العامل المكافأة كاملة.' };
 }
 
 export function calculateEos(input: EosInput): EosResult {
   const { wage, service, reason } = input;
-  if (!Number.isFinite(wage) || wage <= 0) throw new EosInputError('الأجر يجب أن يكون رقماً أكبر من صفر.');
+  if (!Number.isFinite(wage) || wage <= 0)
+    throw new EosInputError('الأجر يجب أن يكون رقماً أكبر من صفر.');
   if (wage > 10_000_000) throw new EosInputError('قيمة الأجر غير معقولة.');
-  for (const [k, v, max] of [['السنوات', service.years, 70], ['الأشهر', service.months, 11], ['الأيام', service.days, 30]] as const) {
+  for (const [k, v, max] of [
+    ['السنوات', service.years, 70],
+    ['الأشهر', service.months, 11],
+    ['الأيام', service.days, 30],
+  ] as const) {
     if (!Number.isInteger(v) || v < 0 || v > max) throw new EosInputError(`قيمة ${k} غير صحيحة.`);
   }
   if (!REASONS.includes(reason)) throw new EosInputError('سبب انتهاء العلاقة غير معروف.');
@@ -122,7 +142,11 @@ export function periodBetween(startIso: string, endIso: string): ServicePeriod {
     const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s);
     if (!m) throw new EosInputError('تاريخ غير صحيح.');
     const d = new Date(Date.UTC(Number(m[1]), Number(m[2]) - 1, Number(m[3])));
-    if (d.getUTCFullYear() !== Number(m[1]) || d.getUTCMonth() !== Number(m[2]) - 1 || d.getUTCDate() !== Number(m[3])) {
+    if (
+      d.getUTCFullYear() !== Number(m[1]) ||
+      d.getUTCMonth() !== Number(m[2]) - 1 ||
+      d.getUTCDate() !== Number(m[3])
+    ) {
       throw new EosInputError('تاريخ غير صحيح.');
     }
     return d;
@@ -138,7 +162,9 @@ export function periodBetween(startIso: string, endIso: string): ServicePeriod {
     const last = new Date(Date.UTC(y, m + 1, 0)).getUTCDate();
     return new Date(Date.UTC(y, m, Math.min(d.getUTCDate(), last)));
   };
-  let totalMonths = (end.getUTCFullYear() - start.getUTCFullYear()) * 12 + (end.getUTCMonth() - start.getUTCMonth());
+  let totalMonths =
+    (end.getUTCFullYear() - start.getUTCFullYear()) * 12 +
+    (end.getUTCMonth() - start.getUTCMonth());
   if (addMonths(start, totalMonths) > end) totalMonths -= 1;
   const anchor = addMonths(start, totalMonths);
   const days = Math.round((end.getTime() - anchor.getTime()) / 86_400_000);
