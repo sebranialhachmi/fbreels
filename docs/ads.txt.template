@@ -1,8 +1,0 @@
-# TEMPLATE ONLY — this file is intentionally NOT served.
-# The app serves /ads.txt automatically, and only when NEXT_PUBLIC_ADSENSE_PUBLISHER_ID is set to a
-# valid value (ca-pub-<digits>). The generated line is:
-#
-#   google.com, pub-<your publisher id digits>, DIRECT, f08c47fec0942fa0
-#
-# Replace the placeholder with the id from your AdSense account (Account > Settings > Account information).
-# Do not publish an ads.txt containing a placeholder id.

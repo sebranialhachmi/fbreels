@@ -1,19 +1,7 @@
 'use client';
 
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useMemo,
-  useState,
-  useSyncExternalStore,
-} from 'react';
-import {
-  CONSENT_EVENT,
-  CONSENT_STORAGE_KEY,
-  NO_CONSENT,
-  type ConsentState,
-} from '@/lib/consent/config';
+import { createContext, useCallback, useContext, useMemo, useState, useSyncExternalStore } from 'react';
+import { CONSENT_EVENT, CONSENT_STORAGE_KEY, NO_CONSENT, type ConsentState } from '@/lib/consent/config';
 
 type Ctx = {
   consent: ConsentState;
@@ -39,9 +27,7 @@ function readSnapshot(): ConsentState {
   cachedRaw = raw;
   try {
     const p = raw ? (JSON.parse(raw) as Partial<ConsentState>) : null;
-    cachedState = p
-      ? { analytics: p.analytics === true, advertising: p.advertising === true, decided: true }
-      : NO_CONSENT;
+    cachedState = p ? { analytics: p.analytics === true, advertising: p.advertising === true, decided: true } : NO_CONSENT;
   } catch {
     cachedState = NO_CONSENT;
   }
@@ -65,20 +51,14 @@ export function ConsentProvider({ children }: { children: React.ReactNode }) {
     try {
       localStorage.setItem(CONSENT_STORAGE_KEY, JSON.stringify({ ...next, ts: Date.now() }));
     } catch {
-      /* cannot persist; fall through and notify so this page view still respects the choice */
+      /* cannot persist; notify anyway so this page view still respects the choice */
     }
     window.dispatchEvent(new Event(CONSENT_EVENT));
     setOpen(false);
   }, []);
 
   const value = useMemo<Ctx>(
-    () => ({
-      consent,
-      save,
-      preferencesOpen,
-      openPreferences: () => setOpen(true),
-      closePreferences: () => setOpen(false),
-    }),
+    () => ({ consent, save, preferencesOpen, openPreferences: () => setOpen(true), closePreferences: () => setOpen(false) }),
     [consent, save, preferencesOpen],
   );
   return <ConsentContext.Provider value={value}>{children}</ConsentContext.Provider>;

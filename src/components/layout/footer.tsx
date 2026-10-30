@@ -1,51 +1,44 @@
-import { getTranslations } from 'next-intl/server';
-import { Link } from '@/i18n/navigation';
-import { Logo } from '@/components/ui/logo';
+import Link from 'next/link';
 import { CookieSettingsButton } from '@/components/consent/cookie-settings-button';
-import { FOOTER_COMPANY, FOOTER_LEGAL, FOOTER_PRODUCT, ROUTE_FOR, type NavKey } from './nav-items';
+import { Logo } from '@/components/ui/logo';
+import { brand } from '@/config/brand';
+import { footerGroups } from './nav';
 
-export async function Footer() {
-  const t = await getTranslations('footer');
-  const n = await getTranslations('nav');
-
-  const column = (title: string, keys: NavKey[], extra?: React.ReactNode) => (
-    <div>
-      <h2 className="text-sm font-semibold">{title}</h2>
-      <ul className="mt-3 space-y-2 text-sm text-muted">
-        {keys.map((k) => (
-          <li key={k}>
-            <Link href={ROUTE_FOR[k]} className="hover:text-fg hover:underline">
-              {n(k)}
-            </Link>
-          </li>
-        ))}
-        {extra}
-      </ul>
-    </div>
-  );
-
+export function Footer() {
+  const groups = footerGroups();
   return (
     <footer className="mt-24 border-t border-border bg-card">
       <div className="container-page py-12">
-        <div className="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr_1fr_1fr]">
           <div className="space-y-3">
             <Logo />
-            <p className="max-w-xs text-sm text-muted">{t('tagline')}</p>
+            <p className="max-w-xs text-sm text-muted">{brand.tagline}. نتائج تقديرية وليست استشارة قانونية.</p>
           </div>
-          {column(t('product'), FOOTER_PRODUCT)}
-          {column(t('company'), FOOTER_COMPANY)}
-          {column(
-            t('legal'),
-            FOOTER_LEGAL,
-            <li key="cookie-settings">
-              <CookieSettingsButton />
-            </li>,
-          )}
+          {groups.map((g) => (
+            <div key={g.title}>
+              <h2 className="text-sm font-semibold">{g.title}</h2>
+              <ul className="mt-3 space-y-2 text-sm text-muted">
+                {g.links.map((l) => (
+                  <li key={l.href}>
+                    <Link href={l.href} className="hover:text-fg hover:underline">
+                      {l.label}
+                    </Link>
+                  </li>
+                ))}
+                {g.title === 'قانوني' && (
+                  <li>
+                    <CookieSettingsButton />
+                  </li>
+                )}
+              </ul>
+            </div>
+          ))}
         </div>
         <div className="mt-10 space-y-2 border-t border-border pt-6 text-xs leading-relaxed text-muted">
-          <p>{t('independence')}</p>
-          <p>{t('responsibility')}</p>
-          <p>{t('copyright', { year: new Date().getFullYear() })}</p>
+          <p>هذا موقع مستقل وغير تابع لأي جهة حكومية، ولا يمثل وزارة الموارد البشرية والتنمية الاجتماعية أو منصة قوى أو المؤسسة العامة للتقاعد أو التأمينات الاجتماعية.</p>
+          <p>
+            © {new Date().getFullYear()} {brand.name}. جميع الحقوق محفوظة.
+          </p>
         </div>
       </div>
     </footer>

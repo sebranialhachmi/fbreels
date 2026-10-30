@@ -1,5 +1,4 @@
 @import 'tailwindcss';
-@import '@fontsource-variable/inter/wght.css';
 
 /* Cairo (Arabic UI font, SIL OFL 1.1, see public/fonts/CAIRO-OFL-LICENSE.txt).
    Self-hosted at fixed URLs so Arabic pages can preload it. `optional` means the font is used only if it
@@ -110,7 +109,7 @@
 }
 
 html {
-  font-family: var(--font-sans);
+  font-family: var(--font-arabic);
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
 }

@@ -1,7 +1,4 @@
 import type { NextConfig } from 'next';
-import createNextIntlPlugin from 'next-intl/plugin';
-
-const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 
 const isProd = process.env.NODE_ENV === 'production';
 const adsense = /^ca-pub-\d{10,20}$/.test(process.env.NEXT_PUBLIC_ADSENSE_PUBLISHER_ID ?? '');
@@ -60,7 +57,7 @@ const nextConfig: NextConfig = {
   distDir: process.env.NEXT_DIST_DIR || '.next',
   output: 'standalone',
   // Markdown content is read from disk at runtime; make sure the standalone bundle ships it.
-  outputFileTracingIncludes: { '/**/*': ['./content/**/*'] },
+  outputFileTracingIncludes: { '/**/*': ['./content/**/*.md'] },
   poweredByHeader: false,
   compress: true,
   reactStrictMode: true,
@@ -80,4 +77,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withNextIntl(nextConfig);
+export default nextConfig;

@@ -1,12 +1,7 @@
-/**
- * Central brand configuration. Change the name here (or via NEXT_PUBLIC_BRAND_NAME)
- * and it propagates to the UI, metadata, structured data and long-form content.
- */
+/** Central brand configuration. Change the name here or via NEXT_PUBLIC_BRAND_NAME. */
 export const brand = {
-  name: process.env.NEXT_PUBLIC_BRAND_NAME?.trim() || 'ReelSave',
-  /** Used in the web app manifest. */
+  name: process.env.NEXT_PUBLIC_BRAND_NAME?.trim() || 'حاسبة مكافأة نهاية الخدمة',
+  tagline: 'احسب مكافأة نهاية الخدمة وفق نظام العمل السعودي',
   themeColor: '#2563EB',
   backgroundColor: '#F9FAFB',
 } as const;
-
-export type Brand = typeof brand;

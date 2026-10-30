@@ -5,5 +5,5 @@ export const siteUrl = raw.replace(/\/+$/, '');
 
 export const isProduction = process.env.NODE_ENV === 'production';
 
-/** Optional public contact address shown on legal pages. Never fabricated. */
+/** Optional public contact address shown on the contact page. Never fabricated. */
 export const publicContactEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL?.trim() || '';

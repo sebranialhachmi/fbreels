@@ -1,12 +1,12 @@
 'use client';
 
 import { Moon, Sun } from 'lucide-react';
-import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 
+const LABEL = 'التبديل بين المظهر الفاتح والداكن';
+
 export function ThemeToggle() {
-  const t = useTranslations('theme');
   const [theme, setTheme] = useState<'light' | 'dark' | null>(null);
 
   useEffect(() => {
@@ -25,15 +25,8 @@ export function ThemeToggle() {
   }
 
   return (
-    <Button
-      variant="ghost"
-      size="icon"
-      onClick={toggle}
-      aria-label={t('toggle')}
-      aria-pressed={theme === null ? undefined : theme === 'dark'}
-      title={t('toggle')}
-    >
-      <Sun aria-hidden className="size-5 hidden dark:block" />
+    <Button variant="ghost" size="icon" onClick={toggle} aria-label={LABEL} aria-pressed={theme === null ? undefined : theme === 'dark'} title={LABEL}>
+      <Sun aria-hidden className="hidden size-5 dark:block" />
       <Moon aria-hidden className="size-5 dark:hidden" />
     </Button>
   );
