@@ -17,6 +17,12 @@ export const analyticsDomain = analyticsEnabled ? plausible : '';
 export const consentMode: 'builtin' | 'google-cmp' =
   process.env.NEXT_PUBLIC_CONSENT_MODE === 'google-cmp' ? 'google-cmp' : 'builtin';
 
+/**
+ * By default no advertising script is loaded on pages that contain the salary calculator, so a third-party script
+ * is never present on the page where visitors type their wage. Opt in with NEXT_PUBLIC_ADS_ON_CALCULATOR_PAGES=true.
+ */
+export const adsOnCalculatorPages = process.env.NEXT_PUBLIC_ADS_ON_CALCULATOR_PAGES === 'true';
+
 export const advertisingNeedsBuiltinConsent = adsenseEnabled && consentMode === 'builtin';
 
 /** Optional categories this deployment really uses. Empty => only essential storage. */

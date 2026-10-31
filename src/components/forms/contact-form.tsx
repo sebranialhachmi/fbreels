@@ -5,7 +5,7 @@ import { Alert } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
 import { track } from '@/lib/analytics/track';
-import { INQUIRY_TYPES, contactSchema, type InquiryType } from '@/lib/contact';
+import { INQUIRY_TYPES, invalidContactFields, type InquiryType } from '@/lib/contact-shared';
 
 type Field = 'name' | 'email' | 'message';
 type Status =
@@ -47,14 +47,9 @@ export function ContactForm() {
       website: String(data.get('website') ?? ''),
       startedAt: startedAt.current,
     };
-    const parsed = contactSchema.safeParse(payload);
-    if (!parsed.success) {
-      const next: Partial<Record<Field, true>> = {};
-      for (const issue of parsed.error.issues) {
-        const key = issue.path[0];
-        if (key === 'name' || key === 'email' || key === 'message') next[key] = true;
-      }
-      setErrors(next);
+    const invalid = invalidContactFields(payload);
+    if (invalid.length > 0) {
+      setErrors(Object.fromEntries(invalid.map((k) => [k, true])) as Partial<Record<Field, true>>);
       setStatus({ kind: 'error', message: 'يرجى تصحيح الحقول المحدّدة.' });
       requestAnimationFrame(() => summary.current?.focus());
       return;
@@ -69,13 +64,22 @@ export function ContactForm() {
       });
       const body = (await res.json().catch(() => null)) as {
         success?: boolean;
-        error?: { code?: string };
+        error?: { code?: string; fields?: string[] };
       } | null;
       if (res.ok && body?.success) {
         form.reset();
         startedAt.current = Date.now();
         setStatus({ kind: 'success' });
         track('contact_submitted');
+        return;
+      }
+      if (res.status === 422 && Array.isArray(body?.error?.fields)) {
+        const next: Partial<Record<Field, true>> = {};
+        for (const f of body.error.fields)
+          if (f === 'name' || f === 'email' || f === 'message') next[f] = true;
+        setErrors(next);
+        setStatus({ kind: 'error', message: 'يرجى تصحيح الحقول المحدّدة.' });
+        requestAnimationFrame(() => summary.current?.focus());
         return;
       }
       const code = body?.error?.code;

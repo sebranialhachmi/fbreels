@@ -106,3 +106,39 @@ test.describe('sector pages do not offer a calculator', () => {
     });
   }
 });
+
+test.describe('field-level accessible errors and the inclusive end-date option', () => {
+  test('invalid fields are flagged, linked to their messages, and focus goes to the first one', async ({
+    page,
+  }) => {
+    await page.goto('/');
+    await calc(page).click();
+    const start = page.getByLabel('تاريخ بداية الخدمة');
+    await expect(start).toHaveAttribute('aria-invalid', 'true');
+    await expect(start).toBeFocused();
+    const describedBy = await start.getAttribute('aria-describedby');
+    await expect(page.locator(`[id="${describedBy}"]`)).toContainText('أدخل تاريخ بداية الخدمة');
+    await expect(
+      page.getByRole('textbox', { name: /البدلات الثابتة الشهرية/ }),
+    ).not.toHaveAttribute('aria-invalid');
+    await manual(page, '3', '5000');
+    await calc(page).click();
+    await expect(page.getByTestId('eos-total')).toHaveText('7,500.00 ريال');
+    await expect(page.locator('[aria-invalid="true"]')).toHaveCount(0);
+  });
+
+  test('inclusive end date changes the Art. 85 band and is shown in the result', async ({
+    page,
+  }) => {
+    await page.goto(PAGES.resignation!);
+    await page.getByLabel('تاريخ بداية الخدمة').fill('2020-01-01');
+    await page.getByLabel('تاريخ نهاية الخدمة').fill('2021-12-31');
+    await page.getByRole('textbox', { name: /الأجر الأساسي الشهري/ }).fill('5000');
+    await calc(page).click();
+    await expect(page.getByTestId('eos-total')).toHaveText('0.00 ريال');
+    await page.getByRole('checkbox', { name: /احتساب يوم النهاية/ }).check();
+    await calc(page).click();
+    await expect(page.getByTestId('eos-total')).toHaveText('1,666.67 ريال');
+    await expect(page.getByTestId('eos-result')).toContainText('شاملة يوم النهاية');
+  });
+});

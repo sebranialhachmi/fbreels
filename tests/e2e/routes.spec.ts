@@ -101,3 +101,54 @@ test.describe('SEO files and security headers', () => {
     expect(bad.status()).toBe(422);
   });
 });
+
+test.describe('performance budgets and caching (regression guards for the audit fixes)', () => {
+  test('JavaScript shipped to a content page stays within budget and excludes the validation library', async ({
+    page,
+  }) => {
+    const scripts: { url: string; bytes: number }[] = [];
+    page.on('response', async (r) => {
+      if (r.request().resourceType() === 'script')
+        scripts.push({ url: r.url(), bytes: (await r.request().sizes()).responseBodySize });
+    });
+    await page.goto(PAGES.about!, { waitUntil: 'networkidle' });
+    const total = scripts.reduce((s, x) => s + x.bytes, 0);
+    expect(total, `JS transferred: ${total} bytes`).toBeLessThan(165_000); // measured 149 KB after removing zod from the client
+    const bodies = await Promise.all(
+      scripts.map(async (s) => (await page.request.get(s.url)).text()),
+    );
+    expect(bodies.some((b) => b.includes('ZodError'))).toBe(false);
+  });
+
+  test('every title fits the ~60 character display limit, and robots.txt has no non-standard Host line', async ({
+    page,
+    request,
+  }) => {
+    for (const path of Object.values(PAGES)) {
+      await page.goto(path);
+      expect((await page.title()).length, path).toBeLessThanOrEqual(60);
+    }
+    expect(await (await request.get('/robots.txt')).text()).not.toMatch(/^Host:/im);
+  });
+
+  test('sitemap has no fabricated lastmod, and the share image is cacheable', async ({
+    request,
+  }) => {
+    expect(await (await request.get('/sitemap.xml')).text()).not.toContain('<lastmod>');
+    expect((await request.get('/og.png')).headers()['cache-control']).toContain('max-age=86400');
+  });
+
+  test('article structured data includes image and publisher logo but no invented author', async ({
+    page,
+  }) => {
+    await page.goto(PAGES.howTo!);
+    const blocks = await page.locator('script[type="application/ld+json"]').allInnerTexts();
+    const article = blocks
+      .map((b) => JSON.parse(b))
+      .flat()
+      .find((j) => j['@type'] === 'Article');
+    expect(article.image).toMatch(/\/og\.png$/);
+    expect(article.publisher.logo.url).toMatch(/icon-512\.png$/);
+    expect(article.author).toBeUndefined();
+  });
+});

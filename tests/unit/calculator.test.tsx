@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { cleanup, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { CalculatorFor } from '@/components/calculator/calculator-for';
 
 afterEach(cleanup);
@@ -157,5 +157,74 @@ describe('EosCalculator', () => {
     await user.click(calcButton());
     globalThis.fetch = original;
     expect(calls).toHaveLength(0);
+  });
+});
+
+describe('EosCalculator — accessible, field-level errors', () => {
+  it('marks only the offending fields invalid, links each message and moves focus to the first one', async () => {
+    const user = userEvent.setup();
+    render(<CalculatorFor preset="general" />);
+    await user.click(calcButton());
+    const start = screen.getByLabelText('تاريخ بداية الخدمة');
+    const end = screen.getByLabelText('تاريخ نهاية الخدمة');
+    const basic = field(/الأجر الأساسي الشهري/);
+    for (const el of [start, end, basic]) {
+      expect(el).toHaveAttribute('aria-invalid', 'true');
+      const msg = document.getElementById(el.getAttribute('aria-describedby')!);
+      expect(msg).toHaveTextContent(/أدخل/);
+    }
+    expect(field(/البدلات الثابتة الشهرية/)).not.toHaveAttribute('aria-invalid');
+    expect(screen.getByRole('alert')).toHaveTextContent('تحقق من الحقول المحدّدة أدناه.');
+    await vi.waitFor(() => expect(start).toHaveFocus());
+  });
+
+  it('clears the invalid state once the input is valid and the form is resubmitted', async () => {
+    const user = userEvent.setup();
+    render(<CalculatorFor preset="general" />);
+    await user.click(calcButton());
+    expect(field(/الأجر الأساسي الشهري/)).toHaveAttribute('aria-invalid', 'true');
+    await user.click(screen.getByRole('radio', { name: 'إدخال المدة يدوياً' }));
+    await user.type(field('سنوات'), '3');
+    await user.type(field(/الأجر الأساسي الشهري/), '5000');
+    await user.click(calcButton());
+    expect(field(/الأجر الأساسي الشهري/)).not.toHaveAttribute('aria-invalid');
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+    expect(screen.getByTestId('eos-total')).toBeInTheDocument();
+  });
+
+  it('attributes a bad allowance and an out-of-range date to the right fields with clear messages', async () => {
+    const user = userEvent.setup();
+    render(<CalculatorFor preset="general" />);
+    await user.type(screen.getByLabelText('تاريخ بداية الخدمة'), '1900-01-01');
+    await user.type(screen.getByLabelText('تاريخ نهاية الخدمة'), '2024-01-01');
+    await user.type(field(/الأجر الأساسي الشهري/), '5000');
+    await user.type(field(/البدلات الثابتة الشهرية/), 'abc');
+    await user.click(calcButton());
+    expect(
+      document.getElementById(
+        screen.getByLabelText('تاريخ نهاية الخدمة').getAttribute('aria-describedby')!,
+      ),
+    ).toHaveTextContent('بين سنتي 1950 و2100');
+    expect(
+      document.getElementById(field(/البدلات الثابتة الشهرية/).getAttribute('aria-describedby')!),
+    ).toHaveTextContent('قيمة البدلات غير صحيحة');
+  });
+});
+
+describe('EosCalculator — inclusive end date option', () => {
+  it('is unchecked by default, changes the band when ticked, and is reported in the result', async () => {
+    const user = userEvent.setup();
+    render(<CalculatorFor preset="resignation" />);
+    const box = screen.getByRole('checkbox', { name: /احتساب يوم النهاية/ });
+    expect(box).not.toBeChecked();
+    await user.type(screen.getByLabelText('تاريخ بداية الخدمة'), '2020-01-01');
+    await user.type(screen.getByLabelText('تاريخ نهاية الخدمة'), '2021-12-31');
+    await user.type(field(/الأجر الأساسي الشهري/), '5000');
+    await user.click(calcButton());
+    expect(screen.getByTestId('eos-total')).toHaveTextContent('0.00 ريال');
+    await user.click(box);
+    await user.click(calcButton());
+    expect(screen.getByTestId('eos-total')).toHaveTextContent('1,666.67 ريال');
+    expect(screen.getByTestId('eos-result')).toHaveTextContent('شاملة يوم النهاية');
   });
 });

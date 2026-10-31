@@ -10,8 +10,6 @@ import {
 } from '@/lib/consent/config';
 import { useConsent } from './consent-provider';
 
-const POLICY_HREF = '/سياسة-ملفات-الارتباط';
-
 function Toggle({
   id,
   label,
@@ -48,7 +46,7 @@ function Toggle({
   );
 }
 
-export function PreferencesDialog() {
+export function PreferencesDialog({ policyHref }: { policyHref: string }) {
   const { consent, save, preferencesOpen, closePreferences } = useConsent();
   const ref = useRef<HTMLDialogElement>(null);
   const uid = useId();
@@ -109,7 +107,7 @@ export function PreferencesDialog() {
         )}
         <p className="text-sm">
           <Link
-            href={POLICY_HREF}
+            href={policyHref}
             className="text-primary-text underline"
             onClick={closePreferences}
           >
@@ -146,7 +144,7 @@ export function PreferencesDialog() {
   );
 }
 
-export function ConsentBanner() {
+export function ConsentBanner({ policyHref }: { policyHref: string }) {
   const { consent, save, openPreferences } = useConsent();
   if (!hasOptionalTracking || consent.decided) return null;
   return (
@@ -157,7 +155,7 @@ export function ConsentBanner() {
       <p className="text-sm leading-relaxed">
         لا نستخدم ملفات الارتباط والتقنيات المشابهة الاختيارية لأغراض التحليلات والإعلانات إلا إذا
         سمحت بذلك. التخزين الأساسي (المظهر واختيارك هنا) يعمل دائماً.{' '}
-        <Link href={POLICY_HREF} className="text-primary-text underline">
+        <Link href={policyHref} className="text-primary-text underline">
           سياسة ملفات الارتباط
         </Link>
       </p>

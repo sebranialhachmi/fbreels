@@ -1,18 +1,9 @@
 import { z } from 'zod';
 
-export const INQUIRY_TYPES = [
-  'general',
-  'support',
-  'copyright',
-  'privacy',
-  'partnership',
-  'bug',
-] as const;
-export type InquiryType = (typeof INQUIRY_TYPES)[number];
+import { INQUIRY_TYPES, cleanText as clean } from './contact-shared';
 
-const CONTROL = /[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/g;
-
-const clean = (s: string) => s.replace(CONTROL, '').trim();
+export { INQUIRY_TYPES };
+export type { InquiryType } from './contact-shared';
 
 export const contactSchema = z.object({
   name: z.string().transform(clean).pipe(z.string().min(2).max(100)),

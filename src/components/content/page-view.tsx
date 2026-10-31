@@ -6,6 +6,8 @@ import { ArticlesList, ContactBlock, SitemapList } from '@/components/content/sp
 import { Breadcrumbs, type Crumb } from '@/components/seo/breadcrumbs';
 import { JsonLd } from '@/components/seo/json-ld';
 import { brand } from '@/config/brand';
+import { siteUrl } from '@/config/site';
+import { adsOnCalculatorPages } from '@/lib/consent/config';
 import { absoluteUrl, allPages, hrefOf, pagesOfKind, type Page } from '@/lib/pages';
 
 function crumbsFor(page: Page): Crumb[] {
@@ -43,7 +45,8 @@ export function PageView({ page }: { page: Page }) {
       ...(page.published ? { datePublished: page.published } : {}),
       ...(page.reviewed ? { dateModified: page.reviewed } : {}),
       mainEntityOfPage: url,
-      publisher: { '@type': 'Organization', name: brand.name },
+      image: `${siteUrl}/og.png`,
+      publisher: { '@type': 'Organization', name: brand.name, logo: { '@type': 'ImageObject', url: `${siteUrl}/icons/icon-512.png` } },
     });
   }
 
@@ -69,7 +72,7 @@ export function PageView({ page }: { page: Page }) {
             <CalculatorFor preset={page.preset} />
           </div>
         )}
-        {page.hasCalculator && <AdSlot placement="belowCalculator" className="my-14" />}
+        {page.hasCalculator && adsOnCalculatorPages && <AdSlot placement="belowCalculator" className="my-14" />}
         {page.after && <div className="prose-content" dangerouslySetInnerHTML={{ __html: page.after }} />}
         {isArticle && <AdSlot placement="inArticle" className="my-10" />}
         {page.faq.length > 0 && (

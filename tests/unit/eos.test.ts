@@ -122,3 +122,191 @@ describe('periodBetween', () => {
     );
   });
 });
+
+describe('inclusive end date option', () => {
+  it('is off by default and shifts the end by one day when on', () => {
+    expect(periodBetween('2020-01-01', '2021-12-31')).toEqual({ years: 1, months: 11, days: 30 });
+    expect(periodBetween('2020-01-01', '2021-12-31', { inclusiveEnd: true })).toEqual({
+      years: 2,
+      months: 0,
+      days: 0,
+    });
+    expect(periodBetween('2020-01-01', '2021-12-31', { inclusiveEnd: false })).toEqual({
+      years: 1,
+      months: 11,
+      days: 30,
+    });
+  });
+  it('turns a one-day-short resignation into the next band (the case found by the audit)', () => {
+    const wage = 5000;
+    const excl = calculateEos({
+      wage,
+      service: periodBetween('2020-01-01', '2021-12-31'),
+      reason: 'resignation',
+    });
+    const incl = calculateEos({
+      wage,
+      service: periodBetween('2020-01-01', '2021-12-31', { inclusiveEnd: true }),
+      reason: 'resignation',
+    });
+    expect(excl.total).toBe(0);
+    expect(incl.total).toBe(1666.67);
+  });
+  it('a single worked day counts as one day when inclusive, and still rejects reversed dates', () => {
+    expect(periodBetween('2024-05-05', '2024-05-05', { inclusiveEnd: true })).toEqual({
+      years: 0,
+      months: 0,
+      days: 1,
+    });
+    expect(() => periodBetween('2024-05-05', '2024-05-04', { inclusiveEnd: true })).toThrow(
+      EosInputError,
+    );
+  });
+});
+
+describe('exact money arithmetic (property tests against rational arithmetic)', () => {
+  // Deterministic LCG so failures are reproducible.
+  let seed = 987654321;
+  const rnd = () => (seed = (seed * 1664525 + 1013904223) % 4294967296) / 4294967296;
+
+  /** Reference: BigInt rational arithmetic with half-up rounding to halalas. */
+  function reference(cents: bigint, y: number, m: number, d: number, reason: Reason): number {
+    const T = BigInt(y * 4380 + m * 365 + d * 12);
+    const five = 5n * 4380n;
+    const first = T < five ? T : five;
+    const after = T > five ? T - five : 0n;
+    const num = cents * (first + 2n * after);
+    const den = 2n * 4380n;
+    let fnum = 1n;
+    let fden = 1n;
+    if (reason === 'resignation') {
+      if (T < 2n * 4380n) fnum = 0n;
+      else if (T < 5n * 4380n) fden = 3n;
+      else if (T < 10n * 4380n) {
+        fnum = 2n;
+        fden = 3n;
+      }
+    }
+    const a = num * fnum;
+    const b = den * fden;
+    return Number((2n * a + b) / (2n * b));
+  }
+
+  it('matches the exact result to the halala on 40,000 random cases', () => {
+    const mismatches: string[] = [];
+    for (let i = 0; i < 40_000; i++) {
+      const cents = 1000 + Math.floor(rnd() * 2_000_000);
+      const y = Math.floor(rnd() * 30);
+      const m = Math.floor(rnd() * 12);
+      const d = Math.floor(rnd() * 31);
+      const reason: Reason = rnd() < 0.5 ? 'employer_termination' : 'resignation';
+      if (y === 0 && m === 0 && d === 0) continue;
+      const got = Math.round(
+        calculateEos({ wage: cents / 100, service: { years: y, months: m, days: d }, reason })
+          .total * 100,
+      );
+      const want = reference(BigInt(cents), y, m, d, reason);
+      if (got !== want && mismatches.length < 5)
+        mismatches.push(`${cents / 100} ${y}y${m}m${d}d ${reason}: ${got} != ${want}`);
+    }
+    expect(mismatches).toEqual([]);
+  });
+
+  it('displayed parts always add up to the displayed full amount', () => {
+    for (let i = 0; i < 20_000; i++) {
+      const wage = (1000 + Math.floor(rnd() * 2_000_000)) / 100;
+      const service = {
+        years: Math.floor(rnd() * 30),
+        months: Math.floor(rnd() * 12),
+        days: Math.floor(rnd() * 31),
+      };
+      if (!service.years && !service.months && !service.days) continue;
+      const r = calculateEos({ wage, service, reason: 'employer_termination' });
+      expect(Math.round((r.firstFiveAmount + r.afterFiveAmount) * 100)).toBe(
+        Math.round(r.fullAmount * 100),
+      );
+      expect(r.total).toBe(r.fullAmount); // full reward reasons: nothing is deducted
+    }
+  });
+
+  it('the total never decreases as the end date moves later (monotonic, no discontinuities)', () => {
+    for (let i = 0; i < 120; i++) {
+      const start = new Date(
+        Date.UTC(1998 + Math.floor(rnd() * 28), Math.floor(rnd() * 12), 1 + Math.floor(rnd() * 28)),
+      );
+      let prev = -1;
+      for (let k = 0; k <= 4200; k += 7) {
+        const end = new Date(start.getTime() + k * 86_400_000);
+        const p = periodBetween(start.toISOString().slice(0, 10), end.toISOString().slice(0, 10));
+        expect(p.days).toBeGreaterThanOrEqual(0);
+        expect(p.days).toBeLessThanOrEqual(30);
+        if (!p.years && !p.months && !p.days) continue;
+        const total = calculateEos({
+          wage: 6000,
+          service: p,
+          reason: 'employer_termination',
+        }).total;
+        expect(total).toBeGreaterThanOrEqual(prev);
+        prev = total;
+      }
+    }
+  });
+
+  it('known rounding regressions found by the audit are fixed', () => {
+    const t = (wage: number, y: number, m: number, d: number, reason: Reason) =>
+      calculateEos({ wage, service: { years: y, months: m, days: d }, reason }).total;
+    expect(t(2529.45, 16, 0, 21, 'resignation')).toBe(34293.11);
+    expect(t(11605.62, 15, 5, 0, 'employer_termination')).toBe(149905.93);
+    expect(t(902.81, 13, 0, 0, 'resignation')).toBe(9479.51);
+    expect(t(299.61, 3, 8, 0, 'resignation')).toBe(183.1);
+  });
+});
+
+describe('boundaries and leap years', () => {
+  const t = (wage: number, p: { years: number; months: number; days: number }, reason: Reason) =>
+    calculateEos({ wage, service: p, reason }).total;
+  it('Art. 85 bands change exactly at 2, 5 and 10 years and not a day earlier', () => {
+    expect(t(6000, { years: 1, months: 11, days: 30 }, 'resignation')).toBe(0);
+    expect(t(6000, { years: 2, months: 0, days: 0 }, 'resignation')).toBe(2000);
+    expect(
+      calculateEos({
+        wage: 6000,
+        service: { years: 4, months: 11, days: 30 },
+        reason: 'resignation',
+      }).fraction,
+    ).toBeCloseTo(1 / 3);
+    expect(
+      calculateEos({ wage: 6000, service: { years: 5, months: 0, days: 0 }, reason: 'resignation' })
+        .fraction,
+    ).toBeCloseTo(2 / 3);
+    expect(
+      calculateEos({
+        wage: 6000,
+        service: { years: 9, months: 11, days: 30 },
+        reason: 'resignation',
+      }).fraction,
+    ).toBeCloseTo(2 / 3);
+    expect(
+      calculateEos({
+        wage: 6000,
+        service: { years: 10, months: 0, days: 0 },
+        reason: 'resignation',
+      }).fraction,
+    ).toBe(1);
+  });
+  it('leap days and month ends', () => {
+    expect(periodBetween('2020-02-29', '2021-02-28')).toEqual({ years: 1, months: 0, days: 0 });
+    expect(periodBetween('2020-02-29', '2024-02-29')).toEqual({ years: 4, months: 0, days: 0 });
+    expect(periodBetween('2019-01-31', '2019-02-28')).toEqual({ years: 0, months: 1, days: 0 });
+    expect(periodBetween('2021-01-31', '2021-03-01')).toEqual({ years: 0, months: 1, days: 1 });
+  });
+  it('very small and very large wages stay exact', () => {
+    expect(t(0.01, { years: 3, months: 0, days: 0 }, 'employer_termination')).toBe(0.02);
+    expect(t(9_999_999.99, { years: 3, months: 0, days: 0 }, 'employer_termination')).toBe(
+      14_999_999.99,
+    );
+    expect(
+      t(10_000_000, { years: 70, months: 11, days: 30 }, 'employer_termination'),
+    ).toBeGreaterThan(600_000_000);
+  });
+});

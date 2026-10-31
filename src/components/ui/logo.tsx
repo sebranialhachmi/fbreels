@@ -22,7 +22,14 @@ export function LogoMark({ size = 34 }: { size?: number }) {
       </g>
       <rect x="36.5" y="36.5" width="6" height="14.5" rx="1.8" fill="#7C3AED" />
       <circle cx="47" cy="46" r="10.5" fill="#F59E0B" stroke="#fff" strokeWidth="3" />
-      <path d="M42.6 46.2l3 3 5.2-6" fill="none" stroke="#fff" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" />
+      <path
+        d="M42.6 46.2l3 3 5.2-6"
+        fill="none"
+        stroke="#fff"
+        strokeWidth="2.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   );
 }

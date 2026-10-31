@@ -69,6 +69,7 @@ const nextConfig: NextConfig = {
         source: '/fonts/:file*',
         headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
       },
+      { source: '/og.png', headers: [{ key: 'Cache-Control', value: 'public, max-age=86400' }] },
       {
         source: '/icons/:file*',
         headers: [{ key: 'Cache-Control', value: 'public, max-age=604800' }],

@@ -45,7 +45,7 @@ describe('page registry', () => {
     const meta = pageById(id);
     const page = getPage(meta.slug)!;
     expect(page.title.length).toBeGreaterThan(20);
-    expect(page.title.length).toBeLessThanOrEqual(110);
+    expect(page.title.length).toBeLessThanOrEqual(60); // longer Arabic titles risk truncation in results
     expect(page.description.length).toBeGreaterThan(60);
     expect(page.description.length).toBeLessThanOrEqual(230);
     expect((page.before.match(/<h1/g) ?? []).length + (page.after.match(/<h1/g) ?? []).length).toBe(

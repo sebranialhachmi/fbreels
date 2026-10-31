@@ -18,6 +18,8 @@ import {
 import { formatPeriod, formatSar, parseIntStrict, parseNumber } from '@/lib/calc/parse';
 
 type Mode = 'dates' | 'manual';
+type FieldKey = 'basic' | 'allowances' | 'start' | 'end' | 'years' | 'months' | 'days';
+type FieldErrors = Partial<Record<FieldKey, string>>;
 
 type Computed = {
   period: ServicePeriod;
@@ -25,6 +27,7 @@ type Computed = {
   withAllowances: EosResult;
   basicOnly: EosResult;
   includeAllowances: boolean;
+  inclusiveEnd: boolean;
   basic: number;
   allowances: number;
 };
@@ -35,6 +38,9 @@ const FRACTION_TEXT = (f: number) =>
 const inputClass =
   'mt-1.5 h-12 w-full rounded-control border border-border bg-bg px-3 text-base aria-[invalid=true]:border-danger';
 
+/** Default for the "count the end date as a service day" option. Change only after checking the official calculator. */
+const DEFAULT_INCLUSIVE_END = false;
+
 export function EosCalculator({
   reasons,
   defaultReason,
@@ -43,6 +49,7 @@ export function EosCalculator({
   defaultReason: Reason;
 }) {
   const uid = useId();
+  const id = (k: string) => `${uid}-${k}`;
   const [reason, setReason] = useState<Reason>(defaultReason);
   const [mode, setMode] = useState<Mode>('dates');
   const [start, setStart] = useState('');
@@ -53,37 +60,55 @@ export function EosCalculator({
   const [basic, setBasic] = useState('');
   const [allowances, setAllowances] = useState('');
   const [includeAllowances, setIncludeAllowances] = useState(true);
-  const [errors, setErrors] = useState<string[]>([]);
+  const [inclusiveEnd, setInclusiveEnd] = useState(DEFAULT_INCLUSIVE_END);
+  const [errors, setErrors] = useState<FieldErrors>({});
+  const [formError, setFormError] = useState<string | null>(null);
   const [result, setResult] = useState<Computed | null>(null);
   const resultRef = useRef<HTMLDivElement>(null);
 
+  function fail(next: FieldErrors, general?: string) {
+    setResult(null);
+    setErrors(next);
+    setFormError(general ?? null);
+    const first = (
+      ['start', 'end', 'years', 'months', 'days', 'basic', 'allowances'] as FieldKey[]
+    ).find((k) => next[k]);
+    if (first) requestAnimationFrame(() => document.getElementById(id(first))?.focus());
+  }
+
   function submit(e: React.FormEvent) {
     e.preventDefault();
-    const problems: string[] = [];
+    const found: FieldErrors = {};
     const basicN = parseNumber(basic);
     const allowN = allowances.trim() === '' ? 0 : parseNumber(allowances);
     if (!Number.isFinite(basicN) || basicN <= 0)
-      problems.push('أدخل الأجر الأساسي كرقم أكبر من صفر.');
-    if (!Number.isFinite(allowN) || allowN < 0) problems.push('قيمة البدلات غير صحيحة.');
+      found.basic = 'أدخل الأجر الأساسي كرقم أكبر من صفر.';
+    if (!Number.isFinite(allowN) || allowN < 0)
+      found.allowances = 'قيمة البدلات غير صحيحة. اتركها فارغة إن لم توجد بدلات.';
 
     let period: ServicePeriod | null = null;
-    try {
-      if (mode === 'dates') {
-        if (!start || !end) throw new EosInputError('أدخل تاريخ بداية الخدمة وتاريخ نهايتها.');
-        period = periodBetween(start, end);
-      } else {
-        const y = parseIntStrict(years);
-        const m = parseIntStrict(months);
-        const d = parseIntStrict(days);
-        if ([y, m, d].some((n) => Number.isNaN(n)))
-          throw new EosInputError('أدخل السنوات والأشهر والأيام كأرقام صحيحة.');
-        period = { years: y, months: m, days: d };
+    if (mode === 'dates') {
+      if (!start) found.start = 'أدخل تاريخ بداية الخدمة.';
+      if (!end) found.end = 'أدخل تاريخ نهاية الخدمة.';
+      if (start && end) {
+        try {
+          period = periodBetween(start, end, { inclusiveEnd });
+        } catch (err) {
+          found.end = err instanceof EosInputError ? err.message : 'تعذّر قراءة التواريخ.';
+        }
       }
-    } catch (err) {
-      problems.push(err instanceof EosInputError ? err.message : 'تعذّر قراءة مدة الخدمة.');
+    } else {
+      const y = parseIntStrict(years);
+      const m = parseIntStrict(months);
+      const d = parseIntStrict(days);
+      if (Number.isNaN(y)) found.years = 'أدخل السنوات كرقم صحيح.';
+      if (Number.isNaN(m)) found.months = 'أدخل الأشهر كرقم صحيح.';
+      if (Number.isNaN(d)) found.days = 'أدخل الأيام كرقم صحيح.';
+      if (!Number.isNaN(y) && !Number.isNaN(m) && !Number.isNaN(d))
+        period = { years: y, months: m, days: d };
     }
 
-    if (problems.length === 0 && period) {
+    if (Object.keys(found).length === 0 && period) {
       try {
         const withAllowances = calculateEos({ wage: basicN + allowN, service: period, reason });
         const basicOnly = calculateEos({ wage: basicN, service: period, reason });
@@ -93,19 +118,24 @@ export function EosCalculator({
           withAllowances,
           basicOnly,
           includeAllowances,
+          inclusiveEnd: mode === 'dates' && inclusiveEnd,
           basic: basicN,
           allowances: allowN,
         });
-        setErrors([]);
+        setErrors({});
+        setFormError(null);
         track('calculation_done', { reason });
         requestAnimationFrame(() => resultRef.current?.focus());
         return;
       } catch (err) {
-        problems.push(err instanceof EosInputError ? err.message : 'تعذّر إجراء الحساب.');
+        const message = err instanceof EosInputError ? err.message : 'تعذّر إجراء الحساب.';
+        // Attribute service-period problems to the period fields, wage problems to the wage field.
+        if (/الأجر/.test(message)) found.basic = message;
+        else if (mode === 'dates') found.end = message;
+        else found.years = message;
       }
     }
-    setResult(null);
-    setErrors(problems);
+    fail(found, 'تحقق من الحقول المحدّدة أدناه.');
   }
 
   function reset() {
@@ -116,9 +146,24 @@ export function EosCalculator({
     setDays('');
     setBasic('');
     setAllowances('');
+    setInclusiveEnd(DEFAULT_INCLUSIVE_END);
     setResult(null);
-    setErrors([]);
+    setErrors({});
+    setFormError(null);
   }
+
+  /** Accessibility wiring for a field: invalid flag + the id of its inline message. */
+  const a11y = (k: FieldKey) => ({
+    id: id(k),
+    'aria-invalid': errors[k] ? (true as const) : undefined,
+    'aria-describedby': errors[k] ? id(`${k}-err`) : undefined,
+  });
+  const fieldError = (k: FieldKey) =>
+    errors[k] ? (
+      <p id={id(`${k}-err`)} className="mt-1 text-sm text-danger-text">
+        {errors[k]}
+      </p>
+    ) : null;
 
   const shown = result
     ? result.includeAllowances
@@ -130,6 +175,7 @@ export function EosCalculator({
       ? result.basicOnly
       : result.withAllowances
     : null;
+  const errorKeys = Object.keys(errors) as FieldKey[];
 
   return (
     <Card className="p-4 sm:p-6">
@@ -140,11 +186,11 @@ export function EosCalculator({
         className="space-y-5"
       >
         <div>
-          <label htmlFor={`${uid}-reason`} className="block text-sm font-semibold">
+          <label htmlFor={id('reason')} className="block text-sm font-semibold">
             سبب انتهاء علاقة العمل
           </label>
           <select
-            id={`${uid}-reason`}
+            id={id('reason')}
             value={reason}
             onChange={(e) => setReason(e.target.value as Reason)}
             className={inputClass}
@@ -163,7 +209,7 @@ export function EosCalculator({
             <label className="flex cursor-pointer items-center gap-2">
               <input
                 type="radio"
-                name={`${uid}-mode`}
+                name={id('mode')}
                 checked={mode === 'dates'}
                 onChange={() => setMode('dates')}
                 className="size-4 accent-[var(--primary)]"
@@ -173,7 +219,7 @@ export function EosCalculator({
             <label className="flex cursor-pointer items-center gap-2">
               <input
                 type="radio"
-                name={`${uid}-mode`}
+                name={id('mode')}
                 checked={mode === 'manual'}
                 onChange={() => setMode('manual')}
                 className="size-4 accent-[var(--primary)]"
@@ -182,49 +228,65 @@ export function EosCalculator({
             </label>
           </div>
           {mode === 'dates' ? (
-            <div className="mt-3 grid gap-4 sm:grid-cols-2">
-              <div>
-                <label htmlFor={`${uid}-start`} className="block text-sm">
-                  تاريخ بداية الخدمة
-                </label>
-                <input
-                  id={`${uid}-start`}
-                  type="date"
-                  dir="ltr"
-                  value={start}
-                  onChange={(e) => setStart(e.target.value)}
-                  className={`${inputClass} text-start`}
-                />
+            <>
+              <div className="mt-3 grid gap-4 sm:grid-cols-2">
+                <div>
+                  <label htmlFor={id('start')} className="block text-sm">
+                    تاريخ بداية الخدمة
+                  </label>
+                  <input
+                    {...a11y('start')}
+                    type="date"
+                    dir="ltr"
+                    value={start}
+                    onChange={(e) => setStart(e.target.value)}
+                    className={`${inputClass} text-start`}
+                  />
+                  {fieldError('start')}
+                </div>
+                <div>
+                  <label htmlFor={id('end')} className="block text-sm">
+                    تاريخ نهاية الخدمة
+                  </label>
+                  <input
+                    {...a11y('end')}
+                    type="date"
+                    dir="ltr"
+                    value={end}
+                    onChange={(e) => setEnd(e.target.value)}
+                    className={`${inputClass} text-start`}
+                  />
+                  {fieldError('end')}
+                </div>
               </div>
-              <div>
-                <label htmlFor={`${uid}-end`} className="block text-sm">
-                  تاريخ نهاية الخدمة
-                </label>
+              <label className="mt-3 flex cursor-pointer items-start gap-2 text-sm">
                 <input
-                  id={`${uid}-end`}
-                  type="date"
-                  dir="ltr"
-                  value={end}
-                  onChange={(e) => setEnd(e.target.value)}
-                  className={`${inputClass} text-start`}
+                  type="checkbox"
+                  checked={inclusiveEnd}
+                  onChange={(e) => setInclusiveEnd(e.target.checked)}
+                  className="mt-1 size-4 accent-[var(--primary)]"
                 />
-              </div>
-            </div>
+                <span>
+                  احتساب يوم النهاية ضمن مدة الخدمة (آخر يوم عمل فعلي). قد يغيّر هذا النتيجة عند
+                  حدود السنتين والخمس والعشر سنوات، فقارن بالحاسبة الرسمية.
+                </span>
+              </label>
+            </>
           ) : (
             <div className="mt-3 grid grid-cols-3 gap-3">
               {(
                 [
-                  ['سنوات', years, setYears],
-                  ['أشهر', months, setMonths],
-                  ['أيام', days, setDays],
+                  ['سنوات', 'years', years, setYears],
+                  ['أشهر', 'months', months, setMonths],
+                  ['أيام', 'days', days, setDays],
                 ] as const
-              ).map(([label, value, set]) => (
-                <div key={label}>
-                  <label htmlFor={`${uid}-${label}`} className="block text-sm">
+              ).map(([label, key, value, set]) => (
+                <div key={key}>
+                  <label htmlFor={id(key)} className="block text-sm">
                     {label}
                   </label>
                   <input
-                    id={`${uid}-${label}`}
+                    {...a11y(key)}
                     inputMode="numeric"
                     dir="ltr"
                     autoComplete="off"
@@ -233,6 +295,7 @@ export function EosCalculator({
                     placeholder="0"
                     className={`${inputClass} text-start`}
                   />
+                  {fieldError(key)}
                 </div>
               ))}
             </div>
@@ -241,11 +304,11 @@ export function EosCalculator({
 
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
-            <label htmlFor={`${uid}-basic`} className="block text-sm font-semibold">
+            <label htmlFor={id('basic')} className="block text-sm font-semibold">
               الأجر الأساسي الشهري (ريال)
             </label>
             <input
-              id={`${uid}-basic`}
+              {...a11y('basic')}
               inputMode="decimal"
               dir="ltr"
               autoComplete="off"
@@ -254,13 +317,14 @@ export function EosCalculator({
               placeholder="مثال: 6000"
               className={`${inputClass} text-start`}
             />
+            {fieldError('basic')}
           </div>
           <div>
-            <label htmlFor={`${uid}-allow`} className="block text-sm font-semibold">
+            <label htmlFor={id('allowances')} className="block text-sm font-semibold">
               البدلات الثابتة الشهرية (ريال) — اختياري
             </label>
             <input
-              id={`${uid}-allow`}
+              {...a11y('allowances')}
               inputMode="decimal"
               dir="ltr"
               autoComplete="off"
@@ -269,6 +333,7 @@ export function EosCalculator({
               placeholder="سكن، مواصلات…"
               className={`${inputClass} text-start`}
             />
+            {fieldError('allowances')}
           </div>
         </div>
         <label className="flex cursor-pointer items-start gap-2 text-sm">
@@ -284,11 +349,22 @@ export function EosCalculator({
           </span>
         </label>
 
-        {errors.length > 0 && (
-          <Alert tone="error" title="تحقق من البيانات">
+        {errorKeys.length > 0 && (
+          <Alert tone="error" title={formError ?? 'تحقق من الحقول'}>
             <ul className="list-disc space-y-1 ps-5">
-              {errors.map((m) => (
-                <li key={m}>{m}</li>
+              {errorKeys.map((k) => (
+                <li key={k}>
+                  <a
+                    href={`#${id(k)}`}
+                    className="underline"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      document.getElementById(id(k))?.focus();
+                    }}
+                  >
+                    {errors[k]}
+                  </a>
+                </li>
               ))}
             </ul>
           </Alert>
@@ -325,7 +401,12 @@ export function EosCalculator({
             </div>
             <dl className="grid gap-x-6 gap-y-3 text-sm sm:grid-cols-2">
               <Row label="سبب الإنهاء" value={REASON_LABELS[result.reason]} />
-              <Row label="مدة الخدمة" value={formatPeriod(result.period)} />
+              <Row
+                label="مدة الخدمة"
+                value={
+                  formatPeriod(result.period) + (result.inclusiveEnd ? ' (شاملة يوم النهاية)' : '')
+                }
+              />
               <Row
                 label="الأجر المعتمد للحساب"
                 value={formatSar(

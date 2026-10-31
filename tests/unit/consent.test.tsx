@@ -23,8 +23,8 @@ async function mount(env: Record<string, string>) {
     <>
       <ConsentProvider>
         <CookieSettingsButton />
-        <ConsentBanner />
-        <PreferencesDialog />
+        <ConsentBanner policyHref="/cookies" />
+        <PreferencesDialog policyHref="/cookies" />
         <ThirdPartyScripts />
       </ConsentProvider>
     </>,

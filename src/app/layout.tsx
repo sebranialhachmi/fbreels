@@ -8,6 +8,7 @@ import { Header } from '@/components/layout/header';
 import { ThemeScript } from '@/components/layout/theme-script';
 import { brand } from '@/config/brand';
 import { siteUrl } from '@/config/site';
+import { hrefOf, pageById, pagesOfKind } from '@/lib/pages';
 
 export const viewport: Viewport = {
   themeColor: [
@@ -59,9 +60,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             {children}
           </main>
           <Footer />
-          <ConsentBanner />
-          <PreferencesDialog />
-          <ThirdPartyScripts />
+          <ConsentBanner policyHref={hrefOf(pageById('cookies'))} />
+          <PreferencesDialog policyHref={hrefOf(pageById('cookies'))} />
+          <ThirdPartyScripts calculatorPaths={pagesOfKind('calculator').map(hrefOf)} />
         </ConsentProvider>
       </body>
     </html>
