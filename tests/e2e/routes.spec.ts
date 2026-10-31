@@ -152,3 +152,22 @@ test.describe('performance budgets and caching (regression guards for the audit 
     expect(article.author).toBeUndefined();
   });
 });
+
+test.describe('Google verification meta tags', () => {
+  for (const [name, path] of Object.entries(PAGES)) {
+    test(`${name}: Search Console and AdSense account tags are in the server-rendered HTML`, async ({
+      request,
+    }) => {
+      const html = await (await request.get(path)).text(); // raw HTML, no JavaScript
+      expect(html).toContain(
+        '<meta name="google-site-verification" content="1W5TAEYrXGw8cNvr9z7xaojiuf_VwVPRJGcMVD529WY"/>',
+      );
+      expect(html).toContain(
+        '<meta name="google-adsense-account" content="ca-pub-7862862797963182"/>',
+      );
+      // exactly one real <meta> element (the same words also appear once inside Next's embedded page data)
+      expect(html.match(/<meta name="google-site-verification"/g)).toHaveLength(1);
+      expect(html.match(/<meta name="google-adsense-account"/g)).toHaveLength(1);
+    });
+  }
+});

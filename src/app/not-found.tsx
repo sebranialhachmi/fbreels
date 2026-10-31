@@ -2,7 +2,8 @@ import Link from 'next/link';
 import { buttonClasses } from '@/components/ui/button';
 import { hrefOf, pageById } from '@/lib/pages';
 
-export const metadata = { title: 'الصفحة غير موجودة', robots: { index: false, follow: false } };
+// Next.js adds <meta name="robots" content="noindex"> to 404 responses by itself; setting robots here duplicated it.
+export const metadata = { title: 'الصفحة غير موجودة' };
 
 export default function NotFound() {
   const suggestions = ['resignation', 'termination', 'government', 'articles', 'contact'].map(

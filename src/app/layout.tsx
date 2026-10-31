@@ -7,7 +7,7 @@ import { Footer } from '@/components/layout/footer';
 import { Header } from '@/components/layout/header';
 import { ThemeScript } from '@/components/layout/theme-script';
 import { brand } from '@/config/brand';
-import { siteUrl } from '@/config/site';
+import { adsenseAccountMeta, googleSiteVerification, siteUrl } from '@/config/site';
 import { hrefOf, pageById, pagesOfKind } from '@/lib/pages';
 
 export const viewport: Viewport = {
@@ -24,6 +24,8 @@ export const metadata: Metadata = {
   title: brand.name,
   applicationName: brand.name,
   formatDetection: { telephone: false },
+  verification: { google: googleSiteVerification },
+  other: { 'google-adsense-account': adsenseAccountMeta },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
